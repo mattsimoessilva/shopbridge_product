@@ -1,3 +1,3 @@
-##ShopBridge - Product API
+## ShopBridge - Product API Service
 
-This is the product API of the ShopBridge system.
+This is the product API service of the ShopBridge system.
