@@ -34,7 +34,7 @@ cd shopbridge_product
 You can run the service locally via Docker Compose (from the orchestration repository) or directly using `dotnet run`:
 
 ```bash
-dotnet run --project OrderAPI.csproj
+dotnet run --project ProductAPI.csproj
 ```
 
 The API will be available at **http://localhost:5001**.
