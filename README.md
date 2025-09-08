@@ -53,7 +53,7 @@ The API will be available at **http://localhost:5001**.
 | PUT    | `/api/Products`     | Updates an existing product         |
 | DELETE | `/api/Products/{id}` | Deletes a product by ID            |
 
-### Product Review
+### Product Reviews
 
 | Method | Endpoint           | Description                       |
 |--------|------------------|-----------------------------------|
