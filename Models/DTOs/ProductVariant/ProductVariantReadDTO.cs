@@ -8,17 +8,17 @@ namespace Models.DTOs.ProductVariant
 
         public Guid ProductId { get; set; }
 
-        public string VariantName { get; set; }
+        public required string VariantName { get; set; }
 
-        public string Color { get; set; }
+        public required string Color { get; set; }
 
-        public string Size { get; set; }
+        public required string Size { get; set; }
 
         public decimal? AdditionalPrice { get; set; }
 
         public int StockQuantity { get; set; }
 
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; }
 
         public bool IsActive { get; set; }
     }

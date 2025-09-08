@@ -11,11 +11,11 @@ namespace ProductAPI.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly IProductService _productService;
+        private readonly IProductService _service;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService service)
         {
-            _productService = productService;
+            _service = service;
         }
 
         [HttpPost]
@@ -23,9 +23,9 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(typeof(ProductCreateDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] ProductCreateDTO object)
+        public async Task<IActionResult> Create([FromBody] ProductCreateDTO dto)
         {
-            var result = await _productService.CreateAsync(object);
+            var result = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
@@ -34,7 +34,7 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<ProductReadDTO>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _productService.GetAllAsync();
+            var result = await _service.GetAllAsync();
             return Ok(result);
         }
 
@@ -44,7 +44,7 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _productService.GetByIdAsync(id);
+            var result = await _service.GetByIdAsync(id);
             if (result == null) return NotFound();
             return Ok(result);
         }
@@ -55,9 +55,9 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromBody] ProductUpdateDTO object)
+        public async Task<IActionResult> Update([FromBody] ProductUpdateDTO dto)
         {
-            var result = await _productService.UpdateAsync(object);
+            var result = await _service.UpdateAsync(dto);
             return Ok(result);
         }
 
@@ -68,7 +68,7 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _productService.DeleteAsync(id);
+            var result = await _service.DeleteAsync(id);
             if (!result) return NotFound();
             return NoContent();
         }

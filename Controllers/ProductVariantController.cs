@@ -23,9 +23,9 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(typeof(ProductVariantCreateDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] ProductVariantCreateDTO object)
+        public async Task<IActionResult> Create([FromBody] ProductVariantCreateDTO dto)
         {
-            var result = await _productVariantService.CreateAsync(object);
+            var result = await _productVariantService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
@@ -55,9 +55,9 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromBody] ProductVariantUpdateDTO object)
+        public async Task<IActionResult> Update([FromBody] ProductVariantUpdateDTO dto)
         {
-            var result = await _productVariantService.UpdateAsync(object);
+            var result = await _productVariantService.UpdateAsync(dto);
             return Ok(result);
         }
 

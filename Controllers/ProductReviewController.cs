@@ -23,9 +23,9 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(typeof(ProductReviewCreateDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] ProductReviewCreateDTO object)
+        public async Task<IActionResult> Create([FromBody] ProductReviewCreateDTO dto)
         {
-            var result = await _productReviewService.CreateAsync(object);
+            var result = await _productReviewService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
@@ -55,9 +55,9 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromBody] ProductReviewUpdateDTO object)
+        public async Task<IActionResult> Update([FromBody] ProductReviewUpdateDTO dto)
         {
-            var result = await _productReviewService.UpdateAsync(object);
+            var result = await _productReviewService.UpdateAsync(dto);
             return Ok(result);
         }
 

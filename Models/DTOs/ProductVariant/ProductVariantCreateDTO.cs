@@ -10,20 +10,20 @@ namespace Models.DTOs.ProductVariant
 
         [Required]
         [MaxLength(100)]
-        public string VariantName { get; set; } // Ex: "Red - XL"
+        public required string VariantName { get; set; } // Ex: "Red - XL"
 
         [MaxLength(50)]
-        public string Color { get; set; }
+        public required string Color { get; set; }
 
         [MaxLength(50)]
-        public string Size { get; set; }
+        public required string Size { get; set; }
 
         [Range(0.00, double.MaxValue)]
         public decimal? AdditionalPrice { get; set; }
 
         public int StockQuantity { get; set; }
 
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; }
 
         public bool IsActive { get; set; } = true;
     }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Models.DTOs.ProductReview;
+using Models.DTOs.ProductVariant;
 
 namespace Models.DTOs.Product
 {
@@ -7,11 +9,11 @@ namespace Models.DTOs.Product
     {
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public string ShortDescription { get; set; }
+        public required string ShortDescription { get; set; }
 
-        public string FullDescription { get; set; }
+        public required string FullDescription { get; set; }
 
         public decimal Price { get; set; }
 
@@ -21,7 +23,7 @@ namespace Models.DTOs.Product
 
         public bool IsFeatured { get; set; }
 
-        public string SKU { get; set; }
+        public required string SKU { get; set; }
 
         public int StockQuantity { get; set; }
 
@@ -29,28 +31,28 @@ namespace Models.DTOs.Product
 
         public bool AllowBackorder { get; set; }
 
-        public string Brand { get; set; }
+        public required string Brand { get; set; }
 
-        public string Category { get; set; }
+        public required string Category { get; set; }
 
-        public string Tags { get; set; }
+        public required string Tags { get; set; }
 
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; }
 
-        public string ThumbnailUrl { get; set; }
+        public required string ThumbnailUrl { get; set; }
 
-        public string SeoTitle { get; set; }
+        public required string SeoTitle { get; set; }
 
-        public string SeoDescription { get; set; }
+        public required string SeoDescription { get; set; }
 
-        public string Slug { get; set; }
+        public required string Slug { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
 
-        public List<ProductVariantReadDto> Variants { get; set; }
+        public required List<ProductVariantReadDTO> Variants { get; set; }
 
-        public List<ProductReviewReadDto> Reviews { get; set; }
+        public required List<ProductReviewReadDTO> Reviews { get; set; }
     }
 }

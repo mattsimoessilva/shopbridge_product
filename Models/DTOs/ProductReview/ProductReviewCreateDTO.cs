@@ -10,14 +10,14 @@ namespace Models.DTOs.ProductReview
 
         [Required]
         [MaxLength(100)]
-        public string ReviewerName { get; set; }
+        public required string ReviewerName { get; set; }
 
         [Required]
         [Range(1, 5)]
         public int Rating { get; set; }
 
         [MaxLength(1000)]
-        public string Comment { get; set; }
+        public required string Comment { get; set; }
 
         public bool IsVerifiedPurchase { get; set; } = false;
     }

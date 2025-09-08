@@ -9,7 +9,7 @@ namespace Models.DTOs.ProductVariant
         public int Rating { get; set; }
 
         [MaxLength(1000)]
-        public string Comment { get; set; }
+        public required string Comment { get; set; }
 
         public bool IsVerifiedPurchase { get; set; }
     }
