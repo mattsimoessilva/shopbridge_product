@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ProductAPI.Models.DTOs;
+using ProductAPI.Models.DTOs.Product;
 using ProductAPI.Models.Entities;
 using ProductAPI.Services.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,10 +20,10 @@ namespace ProductAPI.Controllers
 
         [HttpPost]
         [SwaggerOperation(Summary = "Creates a new product.")]
-        [ProducesResponseType(typeof(ProductDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ProductCreateDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] ProductDTO object)
+        public async Task<IActionResult> Create([FromBody] ProductCreateDTO object)
         {
             var result = await _productService.CreateAsync(object);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
@@ -31,7 +31,7 @@ namespace ProductAPI.Controllers
 
         [HttpGet]
         [SwaggerOperation(Summary = "Retrieves all products.")]
-        [ProducesResponseType(typeof(IEnumerable<ProductDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<ProductReadDTO>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
             var result = await _productService.GetAllAsync();
@@ -40,7 +40,7 @@ namespace ProductAPI.Controllers
 
         [HttpGet("{id}")]
         [SwaggerOperation(Summary = "Retrieves a specific product by ID.")]
-        [ProducesResponseType(typeof(ProductDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProductReadDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -51,11 +51,11 @@ namespace ProductAPI.Controllers
 
         [HttpPut]
         [SwaggerOperation(Summary = "Updates an existing product.")]
-        [ProducesResponseType(typeof(ProductDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProductUpdateDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromBody] ProductDTO object)
+        public async Task<IActionResult> Update([FromBody] ProductUpdateDTO object)
         {
             var result = await _productService.UpdateAsync(object);
             return Ok(result);
