@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Models.DTOs.ProductReview
+namespace ProductAPI.Models.DTOs.ProductReview
 {
     public class ProductReviewCreateDTO
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Models.DTOs.ProductReview;
-using Models.DTOs.ProductVariant;
+using ProductAPI.Models.DTOs.ProductReview;
+using ProductAPI.Models.DTOs.ProductVariant;
 
-namespace Models.DTOs.Product
+namespace ProductAPI.Models.DTOs.Product
 {
     public class ProductReadDTO
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Models.DTOs.ProductReview
+namespace ProductAPI.Models.DTOs.ProductReview
 {
     public class ProductReviewReadDTO
     {

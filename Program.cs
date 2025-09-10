@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using ProductAPI.Data;
 using ProductAPI.Repositories;
@@ -7,12 +8,22 @@ using ProductAPI.Repositories.Interfaces;
 using ProductAPI.Services;
 using ProductAPI.Services.Interfaces;
 using System.Reflection;
+using ProductAPI.Models.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Adding EF Core with SQlite
 builder.Services.AddDbContext<ProductAppDbContext>(options =>
     options.UseSqlite("Data Source=productapi.db"));
+
+// Adding AutoMapper
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<ProductProfile>();
+    cfg.AddProfile<ProductReviewProfile>();
+    cfg.AddProfile<ProductVariantProfile>();
+});
+
 
 // Adding services
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -32,7 +43,7 @@ builder.Services.AddSwaggerGen(c =>
         Description = "An ASP.NET Core Web API for managing products in the ShopBridge system.",
         Contact = new OpenApiContact
         {
-            Name = "Matheus Sim?es",
+            Name = "Matheus Simões",
             Email = "matheussimoesdasilva@outlook.com"
         }
     });

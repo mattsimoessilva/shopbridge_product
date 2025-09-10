@@ -26,7 +26,7 @@ namespace ProductAPI.Controllers
         public async Task<IActionResult> Create([FromBody] ProductVariantCreateDTO dto)
         {
             var result = await _productVariantService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
         [HttpGet]

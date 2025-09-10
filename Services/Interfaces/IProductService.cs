@@ -5,7 +5,7 @@ namespace ProductAPI.Services.Interfaces
 {
     public interface IProductService
     {
-        public Task<ProductCreateDTO> CreateAsync(ProductCreateDTO dto);
+        public Task<ProductReadDTO> CreateAsync(ProductCreateDTO dto);
         public Task<IEnumerable<ProductReadDTO>> GetAllAsync();
         public Task<ProductReadDTO?> GetByIdAsync(Guid id);
         public Task<bool> UpdateAsync(ProductUpdateDTO dto);

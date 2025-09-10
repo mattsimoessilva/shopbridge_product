@@ -11,6 +11,10 @@ namespace ProductAPI.Data
 
         public DbSet<Product> Products => Set<Product>();
 
+        public DbSet<ProductReview> ProductReviews => Set<ProductReview>();
+
+        public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

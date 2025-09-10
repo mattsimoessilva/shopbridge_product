@@ -1,6 +1,8 @@
 using AutoMapper;
+using ProductAPI.Models.Entities;
+using ProductAPI.Models.DTOs.Product;
 
-namespace Models.Profiles
+namespace ProductAPI.Models.Profiles
 {
     public class ProductProfile : Profile
     {

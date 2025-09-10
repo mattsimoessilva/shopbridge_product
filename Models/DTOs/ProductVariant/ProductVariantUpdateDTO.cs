@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Models.DTOs.ProductVariant
+namespace ProductAPI.Models.DTOs.ProductVariant
 {
-
-    public class ProductVariantUpdateDto
+    public class ProductVariantUpdateDTO
     {
+        [Required]
+        public required Guid Id { get; set; }
+
         [Required]
         [MaxLength(100)]
         public required string VariantName { get; set; }

@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnonations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ProductAPI.Models.Entities
 {
@@ -12,17 +12,15 @@ namespace ProductAPI.Models.Entities
 
         [Required]
         [MaxLength(150)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [MaxLength(300)]
-        public string ShortDescription { get; set; }
+        public required string ShortDescription { get; set; }
 
-        public string FullDescription { get; set; }
+        public required string FullDescription { get; set; }
 
-        [Column(TypeName = "decimal(18,2")]
         public decimal Price { get; set; }
 
-        [Column(TypeName = "decimal(18, 2)")]
         public decimal? DiscountPrice { get; set; }
 
         public bool IsActive { get; set; } = true;
@@ -31,7 +29,7 @@ namespace ProductAPI.Models.Entities
 
         [Required]
         [MaxLength(50)]
-        public string SKU { get; set; }
+        public required string SKU { get; set; }
 
         public int StockQuantity { get; set; }
 
@@ -39,28 +37,30 @@ namespace ProductAPI.Models.Entities
 
         public bool AllowBackorder { get; set; }
 
-        public string Brand { get; set; }
+        public required string Brand { get; set; }
 
-        public string Category { get; set; }
+        public required string Category { get; set; }
 
-        public string Tags { get; set; }
+        public required string Tags { get; set; }
 
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; }
 
-        public string ThumbnailUrl { get; set; }
+        public required string ThumbnailUrl { get; set; }
 
-        public string SeoTitle { get; set; }
+        public required string SeoTitle { get; set; }
 
-        public string Slug { get; set; }
+        public required string Slug { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedAt { get; set; }
 
-        // Navigation properties.
-        public ICollection<ProductVariant> Variants { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
-        public ICollection<ProductReview> Reviews { get; set; }
+        // Navigation properties.
+        public required ICollection<ProductVariant> Variants { get; set; }
+
+        public required ICollection<ProductReview> Reviews { get; set; }
 
     }
 }

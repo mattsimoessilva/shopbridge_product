@@ -1,6 +1,6 @@
 using System;
 
-namespace Models.DTOs.ProductVariant
+namespace ProductAPI.Models.DTOs.ProductVariant
 {
     public class ProductVariantReadDTO
     {

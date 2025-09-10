@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Models.DTOs.ProductVariant
+namespace ProductAPI.Models.DTOs.ProductReview
 {
-    public class ProductReviewUpdateDto
+    public class ProductReviewUpdateDTO
     {
+        [Required]
+        public required Guid Id { get; set; }
+
         [Required]
         [Range(1, 5)]
         public int Rating { get; set; }

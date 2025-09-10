@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Models.DTOs.ProductVariant
+namespace ProductAPI.Models.DTOs.ProductVariant
 {
-    public class ProductVariantCreateDto
+    public class ProductVariantCreateDTO
     {
         [Required]
         public Guid ProductId { get; set; }

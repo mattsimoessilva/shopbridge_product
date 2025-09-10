@@ -1,3 +1,4 @@
+using AutoMapper;
 using ProductAPI.Models.DTOs.Product;
 using ProductAPI.Models.Entities;
 using ProductAPI.Repositories.Interfaces;
@@ -72,5 +73,7 @@ namespace ProductAPI.Services
 
             return true;
         }
+
+        public async Task<bool> DeleteAsync(Guid id) => await _productRepository.RemoveAsync(id);
     }
 }

@@ -13,24 +13,23 @@ namespace ProductAPI.Models.Entities
         public Guid ProductId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Product Product { get; set; }
+        public required Product Product { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public string VariantName { get; set; }
+        public required string VariantName { get; set; }
 
         [MaxLength(50)]
-        public string Color { get; set; }
+        public required string Color { get; set; }
 
         [MaxLength(50)]
-        public string Size { get; set; }
+        public required string Size { get; set; }
 
-        [Column(TypeName = "decimal(18,2")]
         public decimal? AdditionalPrice { get; set; }
 
         public int StockQuantity { get; set; }
 
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; }
 
         public bool IsActive { get; set; }
     }

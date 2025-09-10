@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProductAPI.Models
+namespace ProductAPI.Models.Entities
 {
     public class ProductReview
     {
@@ -13,18 +13,18 @@ namespace ProductAPI.Models
         public Guid ProductId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Product Product { get; set; }
+        public required Product Product { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
 
         [Required]
         [Range(1, 5)]
         public int Rating { get; set; }
 
         [MaxLength(1000)]
-        public string Comment { get; set; }
+        public required string Comment { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

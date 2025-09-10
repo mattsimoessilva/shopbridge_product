@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Models.DTOs.Product
+namespace ProductAPI.Models.DTOs.Product
 {
     public class ProductCreateDTO
     {
@@ -41,6 +41,8 @@ namespace Models.DTOs.Product
         public required string Tags { get; set; }
 
         public required string ImageUrl { get; set; }
+
+        public required string ThumbnailURl { get; set; }
 
         public required string SeoTitle { get; set; }
 
