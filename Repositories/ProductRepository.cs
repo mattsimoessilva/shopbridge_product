@@ -33,6 +33,7 @@ namespace ProductAPI.Repositories
             return await _context.Products
                 .AsNoTracking()
                 .Include(p => p.Variants)
+                .Include(p => p.Reviews)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 

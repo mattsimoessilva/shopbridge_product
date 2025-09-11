@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using ProductAPI.Data;
+using ProductAPI.Models.Profiles;
 using ProductAPI.Repositories;
 using ProductAPI.Repositories.Interfaces;
 using ProductAPI.Services;
 using ProductAPI.Services.Interfaces;
+using System;
 using System.Reflection;
-using ProductAPI.Models.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,9 +26,16 @@ builder.Services.AddAutoMapper(cfg =>
 });
 
 
-// Adding services
+// Adding Repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
+builder.Services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
+
+// Adding Services
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
+builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -57,6 +65,14 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<ProductAppDbContext>();
     db.Database.Migrate();
 }
+
+// Initializing Database
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ProductAppDbContext>();
+    DbInitializer.Initialize(context);
+}
+
 
 // Configuring the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
