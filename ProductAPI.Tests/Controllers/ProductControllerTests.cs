@@ -22,18 +22,18 @@ namespace ProductAPI.Tests.Controllers
         }
 
         [Fact]
-        public async Task CreateMethod_ShouldReturnCreatedAtActionWhenProductIsCreated()
+        public async Task CreateMethod_ShouldReturnCreatedAtAction_WhenRecordIsCreated()
         {
-            // Arrange
+            // Arrange.
             var dto = new ProductCreateDTO { Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse" };
             var created = new ProductReadDTO { Id = Guid.NewGuid(), Name = dto.Name, ShortDescription = dto.ShortDescription, FullDescription = dto.FullDescription, Price = dto.Price, DiscountPrice = dto.DiscountPrice, IsActive = dto.IsActive, IsFeatured = dto.IsFeatured, SKU = dto.SKU, StockQuantity = dto.StockQuantity, MinimumStockThreshold = dto.MinimumStockThreshold, AllowBackorder = dto.AllowBackorder, Brand = dto.Brand, Category = dto.Category, Tags = dto.Tags, ImageUrl = dto.ImageUrl, ThumbnailUrl = dto.ThumbnailUrl, SeoTitle = dto.SeoTitle, Slug = dto.Slug, Variants = new List<ProductVariantReadDTO>(), Reviews = new List<ProductReviewReadDTO>() };
 
             _mockService.Setup(s => s.CreateAsync(dto)).ReturnsAsync(created);
 
-            // Act
+            // Act.
             var result = await _controller.Create(dto);
 
-            // Assert
+            // Assert.
             var createdResult = result as CreatedAtActionResult;
             createdResult.Should().NotBeNull();
             createdResult!.Value.Should().BeEquivalentTo(created);
@@ -41,9 +41,9 @@ namespace ProductAPI.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetAllMethod_ShouldReturnOkWithProductList()
+        public async Task GetAllMethod_ShouldReturnOk_WithRecordList()
         {
-            // Arrange
+            // Arrange.
             var products = new List<ProductReadDTO>
             {
                 new() { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", CreatedAt = DateTime.UtcNow, UpdatedAt = null, Variants = new List<ProductVariantReadDTO>(), Reviews = new List<ProductReviewReadDTO>() },
@@ -52,103 +52,103 @@ namespace ProductAPI.Tests.Controllers
 
             _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(products);
 
-            // Act
+            // Act.
             var result = await _controller.GetAll();
 
-            // Assert
+            // Assert.
             var okResult = result as OkObjectResult;
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(products);
         }
 
         [Fact]
-        public async Task GetByIdMethod_ShouldReturnOkWhenProductExists()
+        public async Task GetByIdMethod_ShouldReturnOk_WhenRecordExists()
         {
-            // Arrange
+            // Arrange.
             var productId = Guid.NewGuid();
             var product = new ProductReadDTO { Id = productId, Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", CreatedAt = DateTime.UtcNow, UpdatedAt = null, Variants = new List<ProductVariantReadDTO>(), Reviews = new List<ProductReviewReadDTO>() };
 
             _mockService.Setup(s => s.GetByIdAsync(productId)).ReturnsAsync(product);
 
-            // Act
+            // Act.
             var result = await _controller.GetById(productId);
 
-            // Assert
+            // Assert.
             var okResult = result as OkObjectResult;
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(product);
         }
 
         [Fact]
-        public async Task GetByIdMethod_ShouldReturnNotFoundWhenProductDoesNotExist()
+        public async Task GetByIdMethod_ShouldReturnNotFound_WhenRecordDoesNotExist()
         {
-            // Arrange
+            // Arrange.
             var productId = Guid.NewGuid();
             _mockService.Setup(s => s.GetByIdAsync(productId)).ReturnsAsync((ProductReadDTO?)null);
 
-            // Act
+            // Act.
             var result = await _controller.GetById(productId);
 
-            // Assert
+            // Assert.
             result.Should().BeOfType<NotFoundResult>();
         }
 
         [Fact]
-        public async Task UpdateMethod_ShouldReturnOkWithUpdatedProduct()
+        public async Task UpdateMethod_ShouldReturnOk_WithUpdatedRecord()
         {
-            // Arrange
+            // Arrange.
             var dto = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse" };
             var updated = new ProductReadDTO { Id = dto.Id, Name = dto.Name, ShortDescription = dto.ShortDescription, FullDescription = dto.FullDescription, Price = dto.Price, DiscountPrice = dto.DiscountPrice, IsActive = dto.IsActive, IsFeatured = dto.IsFeatured, SKU = "WM-001", StockQuantity = dto.StockQuantity, MinimumStockThreshold = dto.MinimumStockThreshold, AllowBackorder = dto.AllowBackorder, Brand = dto.Brand, Category = dto.Category, Tags = dto.Tags, ImageUrl = dto.ImageUrl, ThumbnailUrl = dto.ThumbnailUrl, SeoTitle = dto.SeoTitle, Slug = dto.Slug, Variants = new List<ProductVariantReadDTO>(), Reviews = new List<ProductReviewReadDTO>() };
 
             _mockService.Setup(s => s.UpdateAsync(dto)).ReturnsAsync(true);
 
-            // Act
+            // Act.
             var result = await _controller.Update(dto);
 
-            // Assert
+            // Assert.
             result.Should().BeOfType<OkResult>();
         }
 
         [Fact]
-        public async Task UpdateMethod_ShouldReturnNotFoundWhenUpdateFails()
+        public async Task UpdateMethod_ShouldReturnNotFound_WhenUpdateFails()
         {
-            // Arrange
+            // Arrange.
             var dto = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Nonexistent Product", ShortDescription = "Nonexistent.", FullDescription = "Nonexistent.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/nonexistent.jpg", ThumbnailUrl = "/images/products/thumbs/nonexistent.jpg", SeoTitle = "Nonexistent - Ergonomic & Silent", Slug = "non-existent" };
 
             _mockService.Setup(s => s.UpdateAsync(dto)).ReturnsAsync(false);
 
-            // Act
+            // Act.
             var result = await _controller.Update(dto);
 
-            // Assert
+            // Assert.
             result.Should().BeOfType<NotFoundResult>();
         }
 
         [Fact]
-        public async Task DeleteMethod_ShouldReturnNoContentWhenProductIsDeleted()
+        public async Task DeleteMethod_ShouldReturnNoContent_WhenRecordIsDeleted()
         {
-            // Arrange
+            // Arrange.
             var productId = Guid.NewGuid();
             _mockService.Setup(s => s.DeleteAsync(productId)).ReturnsAsync(true);
 
-            // Act
+            // Act.
             var result = await _controller.Delete(productId);
 
-            // Assert
+            // Assert.
             result.Should().BeOfType<NoContentResult>();
         }
 
         [Fact]
-        public async Task DeleteMethod_ShouldReturnNotFoundWhenProductDoesNotExist()
+        public async Task DeleteMethod_ShouldReturnNotFound_WhenRecordDoesNotExist()
         {
-            // Arrange
+            // Arrange.
             var productId = Guid.NewGuid();
             _mockService.Setup(s => s.DeleteAsync(productId)).ReturnsAsync(false);
 
-            // Act
+            // Act.
             var result = await _controller.Delete(productId);
 
-            // Assert
+            // Assert.
             result.Should().BeOfType<NotFoundResult>();
         }
     }
