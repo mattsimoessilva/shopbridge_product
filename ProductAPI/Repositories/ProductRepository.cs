@@ -1,6 +1,7 @@
-using ProductAPI.Models.Entities;
-using ProductAPI.Data;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ProductAPI.Data;
+using ProductAPI.Models.Entities;
 using ProductAPI.Repositories.Interfaces;
 
 namespace ProductAPI.Repositories
@@ -8,10 +9,12 @@ namespace ProductAPI.Repositories
     public class ProductRepository : IProductRepository
     {
         private readonly ProductAppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ProductRepository(ProductAppDbContext context)
+        public ProductRepository(ProductAppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task AddAsync(Product product)
@@ -39,10 +42,14 @@ namespace ProductAPI.Repositories
 
         public async Task<bool> UpdateAsync(Product updatedProduct)
         {
-            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == updatedProduct.Id);
-            if (existingProduct == null) return false;
+            var existingProduct = await _context.Products
+                .Include(p => p.Variants)
+                .FirstOrDefaultAsync(p => p.Id == updatedProduct.Id);
 
-            existingProduct.Variants = updatedProduct.Variants;
+            if (existingProduct == null)
+                return false;
+
+            _mapper.Map(updatedProduct, existingProduct);
 
             await _context.SaveChangesAsync();
             return true;

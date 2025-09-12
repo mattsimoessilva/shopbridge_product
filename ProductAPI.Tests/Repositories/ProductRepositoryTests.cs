@@ -1,17 +1,22 @@
-﻿using Xunit;
-using ProductAPI.Models.Entities;
-using ProductAPI.Data;
-using ProductAPI.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Moq;
+using ProductAPI.Data;
+using ProductAPI.Models.Entities;
+using ProductAPI.Repositories;
 
 namespace ProductAPI.Tests.Repositories
 {
     public class ProductRepositoryTests
     {
+        private readonly Mock<IMapper> _mapperMock;
+
+        public ProductRepositoryTests()
+        {
+            _mapperMock = new Mock<IMapper>();
+        }
+
         private ProductAppDbContext GetDbContext()
         {
             var options = new DbContextOptionsBuilder<ProductAppDbContext>()
@@ -22,7 +27,7 @@ namespace ProductAPI.Tests.Repositories
 
         private ProductRepository GetRepository(ProductAppDbContext context)
         {
-            return new ProductRepository(context);
+            return new ProductRepository(context, _mapperMock.Object);
         }
 
         #region AddAsync Method.
