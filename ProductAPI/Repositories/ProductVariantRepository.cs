@@ -44,7 +44,7 @@ namespace ProductAPI.Repositories
             return true;
         }
 
-        public async Task<bool> RemoveAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             var productVariant = await _context.ProductVariants.FirstOrDefaultAsync(p => p.Id == id);
             if (productVariant == null) return false;

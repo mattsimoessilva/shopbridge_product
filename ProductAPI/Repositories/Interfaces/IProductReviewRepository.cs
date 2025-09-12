@@ -9,6 +9,6 @@ namespace ProductAPI.Repositories.Interfaces
         Task<IEnumerable<ProductReview>> GetAllAsync();
         Task<ProductReview?> GetByIdAsync(Guid id);
         Task<bool> UpdateAsync(ProductReview productReview);
-        Task<bool> RemoveAsync(Guid id);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

@@ -7,6 +7,7 @@ using ProductAPI.Models.DTOs.ProductVariant;
 using ProductAPI.Models.Entities;
 using ProductAPI.Repositories.Interfaces;
 using ProductAPI.Services;
+using System;
 
 namespace ProductAPI.Tests.Services
 {
@@ -122,11 +123,24 @@ namespace ProductAPI.Tests.Services
             var result = await _productService.GetAllAsync();
 
             // Assert 
+            result.Should().BeEquivalentTo(mappedDTOs);
         }
 
         [Fact]
         public async Task GetAllAsyncMethod_ShouldThrowException_WhenRepositoryFails()
         {
+            // Arrange
+            var expectedException = new Exception("Database connection failed.");
+
+            _productRepositoryMock
+                .Setup(r => r.GetAllAsync())
+                .ThrowsAsync(expectedException);
+
+            // Act
+            Func<Task> result = async () => await _productService.GetAllAsync();
+
+            // Assert
+            await result.Should().ThrowAsync<Exception>().WithMessage("Database connection failed.");
         }
 
         #endregion
@@ -136,16 +150,52 @@ namespace ProductAPI.Tests.Services
         [Fact]
         public async Task GetByIdAsyncMethod_ShouldThrowArgumentException_WhenIdIsEmpty()
         {
+            // Arrange
+            var emptyId = Guid.Empty;
+
+            // Act
+            Func<Task> result = async () => await _productService.GetByIdAsync(emptyId);
+
+            // Assert
+            await result.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid product ID (Parameter 'id')");
         }
 
         [Fact]
         public async Task GetByIdAsyncMethod_ShouldReturnMappedDTO_WhenRecordExists()
         {
+            // Arrange
+            var productId = Guid.NewGuid();
+
+            var product = new Product { Id = productId, Name = "Gaming Headset", ShortDescription = "Surround sound gaming headset", FullDescription = "High-fidelity gaming headset with noise-canceling mic and RGB lighting.", Price = 199.99m, DiscountPrice = 149.99m, IsActive = true, IsFeatured = false, SKU = "GH-003", StockQuantity = 60, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "SoundBlaze", Category = "Accessories", Tags = "headset,gaming,surround", ImageUrl = "/images/products/gaming-headset.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-headset.jpg", SeoTitle = "Gaming Headset - Surround & RGB", Slug = "gaming-headset", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+            var mappedDTO = new ProductReadDTO { Id = product.Id, Name = product.Name, ShortDescription = product.ShortDescription, FullDescription = product.FullDescription, Price = product.Price, DiscountPrice = product.DiscountPrice, IsActive = product.IsActive, IsFeatured = product.IsFeatured, SKU = product.SKU, StockQuantity = product.StockQuantity, MinimumStockThreshold = product.MinimumStockThreshold, AllowBackorder = product.AllowBackorder, Brand = product.Brand, Category = product.Category, Tags = product.Tags, ImageUrl = product.ImageUrl, ThumbnailUrl = product.ThumbnailUrl, SeoTitle = product.SeoTitle, Slug = product.Slug, Variants = new List<ProductVariantReadDTO>(), Reviews = new List<ProductReviewReadDTO>() };
+
+            _productRepositoryMock.Setup(r => r.GetByIdAsync(productId)).ReturnsAsync(product);
+            _mapperMock.Setup(m => m.Map<ProductReadDTO>(product)).Returns(mappedDTO);
+
+            // Act
+            var result = await _productService.GetByIdAsync(productId);
+
+            // Assert
+            result.Should().BeEquivalentTo(mappedDTO);
         }
 
         [Fact]
         public async Task GetByIdAsyncMethod_ShouldThrowException_WhenRepositoryFails()
         {
+            // Arrange
+            var productId = Guid.NewGuid();
+            var expectedException = new Exception("Repository failure.");
+
+            _productRepositoryMock
+                .Setup(r => r.GetByIdAsync(productId))
+                .ThrowsAsync(expectedException);
+
+            // Act
+            Func<Task> result = async () => await _productService.GetByIdAsync(productId);
+
+            // Assert
+            await result.Should().ThrowAsync<Exception>()
+                .WithMessage("Repository failure.");
         }
 
         #endregion
@@ -155,16 +205,56 @@ namespace ProductAPI.Tests.Services
         [Fact]
         public async Task UpdateAsyncMethod_ShouldThrowArgumentException_WhenDTOisNullOrIdIsEmpty()
         {
+            // Arrange
+            ProductUpdateDTO nullDTO = null;
+            var emptyIdDTO = new ProductUpdateDTO { Id = Guid.Empty, Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, StockQuantity = 40, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
+
+            // Act
+            Func<Task> actWithNull = async () => await _productService.UpdateAsync(nullDTO);
+            Func<Task> actWithEmptyId = async () => await _productService.UpdateAsync(emptyIdDTO);
+
+            // Assert
+            await actWithEmptyId.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid product update data.");
+            await actWithEmptyId.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid product update data.");
         }
 
         [Fact]
         public async Task UpdateAsyncMethod_ShouldReturnTrue_WhenUpdateIsSuccessful()
         {
+            // Arrange
+            var productUpdateDTO = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, StockQuantity = 40, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
+            var existingProduct = new Product { Id = productUpdateDTO.Id, Name = "Old Name", ShortDescription = "Old Desc", FullDescription = "Old Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "OldBrand", Category = "OldCategory", Tags = "old,tags", ImageUrl = "/images/old.jpg", ThumbnailUrl = "/images/thumbs/old.jpg", SeoTitle = "Old SEO", Slug = "old-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            _productRepositoryMock.Setup(r => r.GetByIdAsync(productUpdateDTO.Id)).ReturnsAsync(existingProduct);
+            _mapperMock.Setup(m => m.Map(productUpdateDTO, existingProduct));
+            _productRepositoryMock.Setup(r => r.UpdateAsync(existingProduct)).ReturnsAsync(true);
+
+            // Act
+            var result = await _productService.UpdateAsync(productUpdateDTO);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         [Fact]
         public async Task UpdateAsyncMethod_ShouldThrowException_WhenRepositoryFails()
         {
+            // Arrange
+            var dto = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, StockQuantity = 40, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
+
+            var existingProduct = new Product { Id = dto.Id, Name = "Old Name", ShortDescription = "Old Desc", FullDescription = "Old Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "OldBrand", Category = "OldCategory", Tags = "old,tags", ImageUrl = "/images/old.jpg", ThumbnailUrl = "/images/thumbs/old.jpg", SeoTitle = "Old SEO", Slug = "old-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            var expectedException = new Exception("Repository failure");
+
+            _productRepositoryMock.Setup(r => r.GetByIdAsync(dto.Id)).ReturnsAsync(existingProduct);
+            _mapperMock.Setup(m => m.Map(dto, existingProduct));
+            _productRepositoryMock.Setup(r => r.UpdateAsync(existingProduct)).ThrowsAsync(expectedException);
+
+            // Act
+            Func<Task> act = async () => await _productService.UpdateAsync(dto);
+
+            // Assert
+            await act.Should().ThrowAsync<Exception>().WithMessage("Repository failure");
         }
 
         #endregion
@@ -174,11 +264,35 @@ namespace ProductAPI.Tests.Services
         [Fact]
         public async Task DeleteAsyncMethod_ShouldCallRepository_WithCorrectId()
         {
+            // Arrange
+            var productId = Guid.NewGuid();
+
+            _productRepositoryMock.Setup(r => r.DeleteAsync(productId)).ReturnsAsync(true);
+
+            // Act
+            var result = await _productService.DeleteAsync(productId);
+
+            // Assert
+            result.Should().BeTrue();
+            _productRepositoryMock.Verify(r => r.DeleteAsync(productId), Times.Once);
         }
 
         [Fact]
         public async Task DeleteAsyncMethod_ShouldThrowException_WhenRepositoryFails()
         {
+            // Arrange
+            var productId = Guid.NewGuid();
+            var expectedException = new Exception("Repository delete failed");
+
+            _productRepositoryMock
+                .Setup(r => r.DeleteAsync(productId))
+                .ThrowsAsync(expectedException);
+
+            // Act
+            Func<Task> act = async () => await _productService.DeleteAsync(productId);
+
+            // Assert
+            await act.Should().ThrowAsync<Exception>().WithMessage("Repository delete failed");
         }
 
         #endregion

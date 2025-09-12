@@ -73,6 +73,6 @@ namespace ProductAPI.Services
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id) => await _productRepository.RemoveAsync(id);
+        public async Task<bool> DeleteAsync(Guid id) => await _productRepository.DeleteAsync(id);
     }
 }

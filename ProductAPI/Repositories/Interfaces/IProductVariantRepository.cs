@@ -8,6 +8,6 @@ namespace ProductAPI.Repositories.Interfaces
         Task<IEnumerable<ProductVariant>> GetAllAsync();
         Task<ProductVariant?> GetByIdAsync(Guid id);
         Task<bool> UpdateAsync(ProductVariant productVariant);
-        Task<bool> RemoveAsync(Guid id);
+        Task<bool> DeleteAsync(Guid id);
     }
 }
