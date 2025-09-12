@@ -42,10 +42,77 @@ namespace ProductAPI.Tests.Services
         public async Task CreateAsyncMethod_ShouldReturnDTO_WhenDTOIsValid()
         {
             // Arrange.
-            var createDTO = new ProductCreateDTO { Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse" };
-            var entity = new Product { Id = Guid.NewGuid(), Name = createDTO.Name, ShortDescription = createDTO.ShortDescription, FullDescription = createDTO.FullDescription, Price = createDTO.Price, DiscountPrice = createDTO.DiscountPrice, IsActive = createDTO.IsActive, IsFeatured = createDTO.IsFeatured, SKU = createDTO.SKU, StockQuantity = createDTO.StockQuantity, MinimumStockThreshold = createDTO.MinimumStockThreshold, AllowBackorder = createDTO.AllowBackorder, Brand = createDTO.Brand, Category = createDTO.Category, Tags = createDTO.Tags, ImageUrl = createDTO.ImageUrl, ThumbnailUrl = createDTO.ThumbnailUrl, SeoTitle = createDTO.SeoTitle, Slug = createDTO.Slug, Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+            var createDTO = new ProductCreateDTO
+            {
+                Name = "Wireless Mouse",
+                ShortDescription = "Ergonomic wireless mouse",
+                FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.",
+                Price = 129.99m,
+                DiscountPrice = 99.99m,
+                IsActive = true,
+                IsFeatured = true,
+                SKU = "WM-001",
+                StockQuantity = 150,
+                MinimumStockThreshold = 10,
+                AllowBackorder = false,
+                Brand = "LogiTech",
+                Category = "Accessories",
+                Tags = "mouse,wireless,ergonomic",
+                ImageUrl = "/images/products/wireless-mouse.jpg",
+                ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg",
+                SeoTitle = "Wireless Mouse - Ergonomic & Silent",
+                Slug = "wireless-mouse"
+            };
 
-            var readDTO = new ProductReadDTO { Id = Guid.NewGuid(), Name = entity.Name, ShortDescription = entity.ShortDescription, FullDescription = entity.FullDescription, Price = entity.Price, DiscountPrice = entity.DiscountPrice, IsActive = entity.IsActive, IsFeatured = entity.IsFeatured, SKU = entity.SKU, StockQuantity = entity.StockQuantity, MinimumStockThreshold = entity.MinimumStockThreshold, AllowBackorder = entity.AllowBackorder, Brand = entity.Brand, Category = entity.Category, Tags = entity.Tags, ImageUrl = entity.ImageUrl, ThumbnailUrl = entity.ThumbnailUrl, SeoTitle = entity.SeoTitle, Slug = entity.Slug, Variants = new List<ProductVariantReadDTO>(), Reviews = new List<ProductReviewReadDTO>() };
+            var entity = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = createDTO.Name,
+                ShortDescription = createDTO.ShortDescription,
+                FullDescription = createDTO.FullDescription,
+                Price = createDTO.Price,
+                DiscountPrice = createDTO.DiscountPrice,
+                IsActive = createDTO.IsActive,
+                IsFeatured = createDTO.IsFeatured,
+                SKU = createDTO.SKU,
+                StockQuantity = createDTO.StockQuantity,
+                MinimumStockThreshold = createDTO.MinimumStockThreshold,
+                AllowBackorder = createDTO.AllowBackorder,
+                Brand = createDTO.Brand,
+                Category = createDTO.Category,
+                Tags = createDTO.Tags,
+                ImageUrl = createDTO.ImageUrl,
+                ThumbnailUrl = createDTO.ThumbnailUrl,
+                SeoTitle = createDTO.SeoTitle,
+                Slug = createDTO.Slug,
+                Variants = new List<ProductVariant>(),
+                Reviews = new List<ProductReview>()
+            };
+
+            var readDTO = new ProductReadDTO
+            {
+                Id = Guid.NewGuid(),
+                Name = entity.Name,
+                ShortDescription = entity.ShortDescription,
+                FullDescription = entity.FullDescription,
+                Price = entity.Price,
+                DiscountPrice = entity.DiscountPrice,
+                IsActive = entity.IsActive,
+                IsFeatured = entity.IsFeatured,
+                SKU = entity.SKU,
+                StockQuantity = entity.StockQuantity,
+                MinimumStockThreshold = entity.MinimumStockThreshold,
+                AllowBackorder = entity.AllowBackorder,
+                Brand = entity.Brand,
+                Category = entity.Category,
+                Tags = entity.Tags,
+                ImageUrl = entity.ImageUrl,
+                ThumbnailUrl = entity.ThumbnailUrl,
+                SeoTitle = entity.SeoTitle,
+                Slug = entity.Slug,
+                Variants = new List<ProductVariantReadDTO>(),
+                Reviews = new List<ProductReviewReadDTO>()
+            };
 
             _mapperMock.Setup(m => m.Map<Product>(createDTO)).Returns(entity);
             _mapperMock.Setup(m => m.Map<ProductReadDTO>(entity)).Returns(readDTO);
