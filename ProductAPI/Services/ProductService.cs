@@ -3,7 +3,6 @@ using ProductAPI.Models.DTOs.Product;
 using ProductAPI.Models.Entities;
 using ProductAPI.Repositories.Interfaces;
 using ProductAPI.Services.Interfaces;
-using System;
 
 namespace ProductAPI.Services
 {

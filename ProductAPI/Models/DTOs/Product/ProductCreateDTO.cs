@@ -42,7 +42,7 @@ namespace ProductAPI.Models.DTOs.Product
 
         public required string ImageUrl { get; set; }
 
-        public required string ThumbnailURl { get; set; }
+        public required string ThumbnailUrl { get; set; }
 
         public required string SeoTitle { get; set; }
 

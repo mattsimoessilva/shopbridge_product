@@ -19,7 +19,7 @@
   "category": "Electronics",
   "tags": "headphones, bluetooth, audio, wireless",
   "imageUrl": "https://example.com/images/headphones.jpg",
-  "thumbnailURl": "https://example.com/images/headphones-thumb.jpg",
+  "ThumbnailUrl": "https://example.com/images/headphones-thumb.jpg",
   "seoTitle": "Sony Wireless Bluetooth Headphones - Noise Cancelling",
   "seoDescription": "Shop the best wireless noise cancelling headphones with long battery life and premium sound quality.",
   "slug": "sony-wireless-bluetooth-headphones"

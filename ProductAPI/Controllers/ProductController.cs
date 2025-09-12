@@ -51,15 +51,19 @@ namespace ProductAPI.Controllers
 
         [HttpPut]
         [SwaggerOperation(Summary = "Updates an existing product.")]
-        [ProducesResponseType(typeof(ProductUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update([FromBody] ProductUpdateDTO dto)
         {
-            var result = await _service.UpdateAsync(dto);
-            return Ok(result);
+            var success = await _service.UpdateAsync(dto);
+            if (!success)
+                return NotFound();
+
+            return Ok();
         }
+
 
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Deletes a product by ID.")]
