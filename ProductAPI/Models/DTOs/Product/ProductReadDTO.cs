@@ -43,8 +43,6 @@ namespace ProductAPI.Models.DTOs.Product
 
         public required string SeoTitle { get; set; }
 
-        public required string SeoDescription { get; set; }
-
         public required string Slug { get; set; }
 
         public DateTime CreatedAt { get; set; }
