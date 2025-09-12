@@ -21,8 +21,10 @@ namespace ProductAPI.Tests.Controllers
             _controller = new ProductController(_mockService.Object);
         }
 
+        #region Create Method.
+
         [Fact]
-        public async Task CreateMethod_ShouldReturnCreatedAtAction_WhenRecordIsCreated()
+        public async Task Create_ShouldReturnCreatedAtAction_WhenRecordIsCreated()
         {
             // Arrange
             var dto = new ProductCreateDTO { Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse" };
@@ -40,8 +42,12 @@ namespace ProductAPI.Tests.Controllers
             createdResult.ActionName.Should().Be(nameof(_controller.GetById));
         }
 
+        #endregion
+
+        #region GetAll Method.
+
         [Fact]
-        public async Task GetAllMethod_ShouldReturnOk_WithRecordList()
+        public async Task GetAll_ShouldReturnOk_WithRecordList()
         {
             // Arrange
             var products = new List<ProductReadDTO>
@@ -61,8 +67,12 @@ namespace ProductAPI.Tests.Controllers
             okResult!.Value.Should().BeEquivalentTo(products);
         }
 
+        #endregion
+
+        #region GetById Method.
+
         [Fact]
-        public async Task GetByIdMethod_ShouldReturnOk_WhenRecordExists()
+        public async Task GetById_ShouldReturnOk_WhenRecordExists()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -80,7 +90,7 @@ namespace ProductAPI.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetByIdMethod_ShouldReturnNotFound_WhenRecordDoesNotExist()
+        public async Task GetById_ShouldReturnNotFound_WhenRecordDoesNotExist()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -93,8 +103,12 @@ namespace ProductAPI.Tests.Controllers
             result.Should().BeOfType<NotFoundResult>();
         }
 
+        #endregion
+
+        #region Update Method.
+
         [Fact]
-        public async Task UpdateMethod_ShouldReturnOk_WithUpdatedRecord()
+        public async Task Update_ShouldReturnOk_WithUpdatedRecord()
         {
             // Arrange
             var dto = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse" };
@@ -110,7 +124,7 @@ namespace ProductAPI.Tests.Controllers
         }
 
         [Fact]
-        public async Task UpdateMethod_ShouldReturnNotFound_WhenUpdateFails()
+        public async Task Update_ShouldReturnNotFound_WhenUpdateFails()
         {
             // Arrange
             var dto = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Nonexistent Product", ShortDescription = "Nonexistent.", FullDescription = "Nonexistent.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/nonexistent.jpg", ThumbnailUrl = "/images/products/thumbs/nonexistent.jpg", SeoTitle = "Nonexistent - Ergonomic & Silent", Slug = "non-existent" };
@@ -124,8 +138,12 @@ namespace ProductAPI.Tests.Controllers
             result.Should().BeOfType<NotFoundResult>();
         }
 
+        #endregion
+
+        #region Delete Method.
+
         [Fact]
-        public async Task DeleteMethod_ShouldReturnNoContent_WhenRecordIsDeleted()
+        public async Task Delete_ShouldReturnNoContent_WhenRecordIsDeleted()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -139,7 +157,7 @@ namespace ProductAPI.Tests.Controllers
         }
 
         [Fact]
-        public async Task DeleteMethod_ShouldReturnNotFound_WhenRecordDoesNotExist()
+        public async Task Delete_ShouldReturnNotFound_WhenRecordDoesNotExist()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -151,5 +169,7 @@ namespace ProductAPI.Tests.Controllers
             // Assert
             result.Should().BeOfType<NotFoundResult>();
         }
+
+        #endregion
     }
 }

@@ -6,7 +6,7 @@ namespace ProductAPI.Tests.Models.Entities
 {
     public class ProductTests
     {
-        private Product CreateValidProduct() => new()
+        private Product CreateValidObject() => new()
         {
             Id = Guid.NewGuid(),
             Name = "Test Product",
@@ -26,10 +26,10 @@ namespace ProductAPI.Tests.Models.Entities
         };
 
         [Fact]
-        public void Product_Should_FailValidation_When_NameIsMissing()
+        public void Model_ShouldFailValidation_WhenNameIsMissing()
         {
             // Arrange
-            var product = CreateValidProduct();
+            var product = CreateValidObject();
             product.Name = null!;
 
             var context = new ValidationContext(product);
@@ -44,11 +44,11 @@ namespace ProductAPI.Tests.Models.Entities
         }
 
         [Fact]
-        public void Product_Should_FailValidation_When_SKU_ExceedsMaxLength()
+        public void Model_ShouldFailValidation_WhenSKUExceedsMaxLength()
         {
             // Arrange
-            var product = CreateValidProduct();
-            product.SKU = new string('X', 51); // MaxLength is 50
+            var product = CreateValidObject();
+            product.SKU = new string('X', 51);
 
             var context = new ValidationContext(product);
             var results = new List<ValidationResult>();
@@ -62,10 +62,10 @@ namespace ProductAPI.Tests.Models.Entities
         }
 
         [Fact]
-        public void Product_DefaultValues_ShouldBeCorrect()
+        public void Model_DefaultValues_ShouldBeCorrect()
         {
             // Arrange
-            var product = CreateValidProduct();
+            var product = CreateValidObject();
 
             // Assert
             Assert.True(product.IsActive);
