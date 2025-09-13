@@ -55,8 +55,6 @@ namespace ProductAPI.Models.Entities
 
         public DateTime? UpdatedAt { get; set; }
 
-        public DateTime? DeletedAt { get; set; }
-
         // Navigation properties.
         public required ICollection<ProductVariant> Variants { get; set; }
 

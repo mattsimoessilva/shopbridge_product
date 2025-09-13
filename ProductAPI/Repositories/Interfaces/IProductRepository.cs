@@ -1,3 +1,4 @@
+using ProductAPI.Models.DTOs.Product;
 using ProductAPI.Models.Entities;
 
 namespace ProductAPI.Repositories.Interfaces

@@ -32,7 +32,6 @@ namespace ProductAPI.Repositories
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
             return await _context.Products
-                .Where(p => p.DeletedAt == null)
                 .AsNoTracking()
                 .ToListAsync();
         }
