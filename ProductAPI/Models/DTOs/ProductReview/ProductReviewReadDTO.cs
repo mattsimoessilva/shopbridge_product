@@ -8,7 +8,7 @@ namespace ProductAPI.Models.DTOs.ProductReview
 
         public Guid ProductId { get; set; }
 
-        public required string ReviewerName { get; set; }
+        public required string UserId { get; set; }
 
         public int Rating { get; set; }
 

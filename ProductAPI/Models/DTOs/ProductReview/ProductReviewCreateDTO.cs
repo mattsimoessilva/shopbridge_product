@@ -10,7 +10,7 @@ namespace ProductAPI.Models.DTOs.ProductReview
 
         [Required]
         [MaxLength(100)]
-        public required string ReviewerName { get; set; }
+        public required string UserId { get; set; }
 
         [Required]
         [Range(1, 5)]

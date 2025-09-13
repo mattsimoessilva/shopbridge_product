@@ -11,11 +11,11 @@ namespace ProductAPI.Controllers
     [Route("api/[controller]")]
     public class ProductReviewController : ControllerBase
     {
-        private readonly IProductReviewService _productReviewService;
+        private readonly IProductReviewService _service;
 
-        public ProductReviewController(IProductReviewService productReviewService)
+        public ProductReviewController(IProductReviewService service)
         {
-            _productReviewService = productReviewService;
+            _service = service;
         }
 
         [HttpPost]
@@ -25,7 +25,7 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Create([FromBody] ProductReviewCreateDTO dto)
         {
-            var result = await _productReviewService.CreateAsync(dto);
+            var result = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
@@ -34,7 +34,7 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<ProductReviewReadDTO>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _productReviewService.GetAllAsync();
+            var result = await _service.GetAllAsync();
             return Ok(result);
         }
 
@@ -44,7 +44,7 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _productReviewService.GetByIdAsync(id);
+            var result = await _service.GetByIdAsync(id);
             if (result == null) return NotFound();
             return Ok(result);
         }
@@ -57,8 +57,11 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update([FromBody] ProductReviewUpdateDTO dto)
         {
-            var result = await _productReviewService.UpdateAsync(dto);
-            return Ok(result);
+            var success = await _service.UpdateAsync(dto);
+            if (!success)
+                return NotFound();
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -68,7 +71,7 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _productReviewService.DeleteAsync(id);
+            var result = await _service.DeleteAsync(id);
             if (!result) return NotFound();
             return NoContent();
         }
