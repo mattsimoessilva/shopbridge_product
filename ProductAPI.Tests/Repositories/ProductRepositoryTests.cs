@@ -33,7 +33,7 @@ namespace ProductAPI.Tests.Repositories
         #region AddAsync Method.
 
         [Fact]
-        public async Task AddAsync_ShouldAddRecordToDatabase()
+        public async Task AddAsync_ShouldPersistAndReturnEntity()
         {
             // Arrange
             var context = GetDbContext();
@@ -41,41 +41,40 @@ namespace ProductAPI.Tests.Repositories
             var product = new Product { Id = Guid.NewGuid(), Name = "Test Name", ShortDescription = "Test Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "TestBrand", Category = "TestCategory", Tags = "test,tags", ImageUrl = "/images/test.jpg", ThumbnailUrl = "/images/thumbs/test.jpg", SeoTitle = "Test SEO", Slug = "slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
 
             // Act
-            await repository.AddAsync(product);
+            var result = await repository.AddAsync(product);
 
             // Assert
-            var savedProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
-            Assert.NotNull(savedProduct);
-            savedProduct.Should().BeEquivalentTo(product, options =>
+            result.Should().NotBeNull();
+            Assert.NotNull(result);
+            result.Should().BeEquivalentTo(product, options =>
                 options.Excluding(p => p.Variants)
-                .Excluding(p => p.Reviews)
-                .Excluding(p => p.Id));
-        }
+                       .Excluding(p => p.Reviews));
 
-        [Fact]
-        public async Task AddAsync_ShouldPersistCorrectData()
-        {
-            // Arrange
-            var context = GetDbContext();
-            var repository = GetRepository(context);
-            var product = new Product { Id = Guid.NewGuid(), Name = "Test Name", ShortDescription = "Test Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "TestBrand", Category = "TestCategory", Tags = "test,tags", ImageUrl = "/images/test.jpg", ThumbnailUrl = "/images/thumbs/test.jpg", SeoTitle = "Test SEO", Slug = "slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
-
-            // Act
-            await repository.AddAsync(product);
-
-            // Assert
-            var savedProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
-            Assert.NotNull(savedProduct);
-            savedProduct.Should().BeEquivalentTo(product, options =>
+            var saved = await context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
+            Assert.NotNull(saved);
+            saved.Should().BeEquivalentTo(product, options =>
                 options.Excluding(p => p.Variants)
-                       .Excluding(p => p.Reviews)
-                       .Excluding(p => p.Id));
+                       .Excluding(p => p.Reviews));
         }
 
         [Fact]
         public async Task AddAsync_ShouldHandleNullRecordGracefully()
         {
+            // Arrange
+            var context = GetDbContext();
+            var repository = GetRepository(context);
 
+            // Act
+            Func<Task> act = () => repository.AddAsync(null);
+
+            // Assert
+            await act
+                .Should()
+                .ThrowAsync<ArgumentNullException>()
+                .WithParameterName("product");
+
+            var allProducts = await context.Products.ToListAsync();
+            allProducts.Should().BeEmpty();
         }
 
         #endregion

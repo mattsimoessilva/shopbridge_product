@@ -17,10 +17,16 @@ namespace ProductAPI.Repositories
             _mapper = mapper;
         }
 
-        public async Task AddAsync(Product product)
+        public async Task<Product> AddAsync(Product product)
         {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
             await _context.Products.AddAsync(product);
+
             await _context.SaveChangesAsync();
+
+            return product;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
@@ -33,6 +39,11 @@ namespace ProductAPI.Repositories
 
         public async Task<Product?> GetByIdAsync(Guid id)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException(
+                    "Id cannot be an empty GUID",
+                    nameof(id));
+
             return await _context.Products
                 .AsNoTracking()
                 .Include(p => p.Variants)
@@ -42,6 +53,9 @@ namespace ProductAPI.Repositories
 
         public async Task<bool> UpdateAsync(Product updatedProduct)
         {
+            if (updatedProduct == null)
+                throw new ArgumentNullException(nameof(updatedProduct));
+
             var existingProduct = await _context.Products
                 .Include(p => p.Variants)
                 .FirstOrDefaultAsync(p => p.Id == updatedProduct.Id);
@@ -57,6 +71,11 @@ namespace ProductAPI.Repositories
 
         public async Task<bool> DeleteAsync(Guid id)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException(
+                    "Id cannot be an empty GUID",
+                    nameof(id));
+
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             if (product == null) return false;
 

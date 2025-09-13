@@ -40,6 +40,7 @@ namespace ProductAPI.Tests.Controllers
             createdResult.Should().NotBeNull();
             createdResult!.Value.Should().BeEquivalentTo(created);
             createdResult.ActionName.Should().Be(nameof(_controller.GetById));
+            _mockService.Verify(s => s.CreateAsync(dto), Times.Once);
         }
 
         #endregion

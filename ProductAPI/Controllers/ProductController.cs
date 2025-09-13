@@ -25,8 +25,19 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Create([FromBody] ProductCreateDTO dto)
         {
-            var result = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            try
+            {
+                var result = await _service.CreateAsync(dto);
+
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { error = ex.ParamName + " cannot be null" });
+            }
         }
 
         [HttpGet]

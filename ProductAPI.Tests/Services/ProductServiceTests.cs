@@ -36,7 +36,13 @@ namespace ProductAPI.Tests.Services
             Func<Task> act = async () => await _productService.CreateAsync(createDTO);
 
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(act);
+            await act
+                .Should()
+                .ThrowAsync<ArgumentNullException>()
+                .WithParameterName("dto");
+
+            _mapperMock.Verify(m => m.Map<Product>(It.IsAny<ProductCreateDTO>()), Times.Never);
+            _productRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
@@ -49,7 +55,7 @@ namespace ProductAPI.Tests.Services
 
             _mapperMock.Setup(m => m.Map<Product>(createDTO)).Returns(entity);
             _mapperMock.Setup(m => m.Map<ProductReadDTO>(entity)).Returns(readDTO);
-            _productRepositoryMock.Setup(r => r.AddAsync(entity)).Returns(Task.CompletedTask);
+            _productRepositoryMock.Setup(r => r.AddAsync(entity)).ReturnsAsync(entity);
 
             // Act
             var result = await _productService.CreateAsync(createDTO);
