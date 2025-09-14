@@ -47,3 +47,8 @@ TestResults/
 
 # Publish output
 publish/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
