@@ -26,20 +26,20 @@ namespace ProductAPI.Tests.Controllers
         public async Task Create_ShouldReturnCreatedAtAction_WhenRecordIsCreated()
         {
             // Arrange
-            var productId = Guid.NewGuid();
-            var dto = new ProductReviewCreateDTO { ProductId = productId, UserId = "something123", Rating = 5, Comment = "Super comfortable and responsive!", IsVerifiedPurchase = true };
-            var created = new ProductReviewReadDTO { ProductId = productId, UserId = "something123", Rating = 5, Comment = "Super comfortable and responsive!", CreatedAt = DateTime.UtcNow.AddDays(-5), IsVerifiedPurchase = true };
+            var referenceId = Guid.NewGuid();
+            var dto = new ProductReviewCreateDTO { ProductId = referenceId, UserId = "something123", Rating = 5, Comment = "Super comfortable and responsive!", IsVerifiedPurchase = true };
+            var created = new ProductReviewReadDTO { ProductId = referenceId, UserId = "something123", Rating = 5, Comment = "Super comfortable and responsive!", CreatedAt = DateTime.UtcNow.AddDays(-5), IsVerifiedPurchase = true };
 
             _mockService.Setup(s => s.CreateAsync(dto)).ReturnsAsync(created);
 
             // Act
-            var result = await _controller.Create(dto);
+            var act = await _controller.Create(dto);
 
             // Assert
-            var createdResult = result as CreatedAtActionResult;
-            createdResult.Should().NotBeNull();
-            createdResult!.Value.Should().BeEquivalentTo(created);
-            createdResult.ActionName.Should().Be(nameof(_controller.GetById));
+            var createdAct = act as CreatedAtActionResult;
+            createdAct.Should().NotBeNull();
+            createdAct!.Value.Should().BeEquivalentTo(created);
+            createdAct.ActionName.Should().Be(nameof(_controller.GetById));
             _mockService.Verify(s => s.CreateAsync(dto), Times.Once);
         }
 
@@ -51,21 +51,21 @@ namespace ProductAPI.Tests.Controllers
         public async Task GetAll_ShouldReturnOk_WithRecordList()
         {
             // Arrange
-            var reviews = new List<ProductReviewReadDTO>
+            var entities = new List<ProductReviewReadDTO>
             {
                 new() { ProductId = Guid.NewGuid(), UserId = "something123", Rating = 5, Comment = "Super comfortable and responsive!", CreatedAt = DateTime.UtcNow.AddDays(-5), IsVerifiedPurchase = true },
                 new() { ProductId = Guid.NewGuid(), UserId = "something123", Rating = 5, Comment = "Not comfortable and not responsive!", CreatedAt = DateTime.UtcNow.AddDays(-5), IsVerifiedPurchase = true },
             };
 
-            _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(reviews);
+            _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(entities);
 
             // Act
-            var result = await _controller.GetAll();
+            var act = await _controller.GetAll();
 
             // Assert
-            var okResult = result as OkObjectResult;
-            okResult.Should().NotBeNull();
-            okResult!.Value.Should().BeEquivalentTo(reviews);
+            var okAct = act as OkObjectResult;
+            okAct.Should().NotBeNull();
+            okAct!.Value.Should().BeEquivalentTo(entities);
         }
 
         #endregion
@@ -76,18 +76,18 @@ namespace ProductAPI.Tests.Controllers
         public async Task GetById_ShouldReturnOk_WhenRecordExists()
         {
             // Arrange
-            var productId = Guid.NewGuid();
-            var created = new ProductReviewReadDTO { ProductId = productId, UserId = "something123", Rating = 5, Comment = "Super comfortable and responsive!", CreatedAt = DateTime.UtcNow.AddDays(-5), IsVerifiedPurchase = true };
+            var referenceId = Guid.NewGuid();
+            var created = new ProductReviewReadDTO { ProductId = referenceId, UserId = "something123", Rating = 5, Comment = "Super comfortable and responsive!", CreatedAt = DateTime.UtcNow.AddDays(-5), IsVerifiedPurchase = true };
 
-            _mockService.Setup(s => s.GetByIdAsync(productId)).ReturnsAsync(created);
+            _mockService.Setup(s => s.GetByIdAsync(referenceId)).ReturnsAsync(created);
 
             // Act
-            var result = await _controller.GetById(productId);
+            var act = await _controller.GetById(referenceId);
 
             // Assert
-            var okResult = result as OkObjectResult;
-            okResult.Should().NotBeNull();
-            okResult!.Value.Should().BeEquivalentTo(created);
+            var okAct = act as OkObjectResult;
+            okAct.Should().NotBeNull();
+            okAct!.Value.Should().BeEquivalentTo(created);
         }
 
         [Fact]
@@ -98,10 +98,10 @@ namespace ProductAPI.Tests.Controllers
             _mockService.Setup(s => s.GetByIdAsync(id)).ReturnsAsync((ProductReviewReadDTO?)null);
 
             // Act
-            var result = await _controller.GetById(id);
+            var act = await _controller.GetById(id);
 
             // Assert
-            result.Should().BeOfType<NotFoundResult>();
+            act.Should().BeOfType<NotFoundResult>();
         }
 
         #endregion
@@ -113,17 +113,17 @@ namespace ProductAPI.Tests.Controllers
         {
             // Arrange
             var id = Guid.NewGuid();
-            var productId = Guid.NewGuid();
+            var referenceId = Guid.NewGuid();
             var dto = new ProductReviewUpdateDTO { Id = id, Rating = 5, Comment = "Super comfortable and responsive!", IsVerifiedPurchase = true };
-            var updated = new ProductReviewReadDTO { ProductId = productId, UserId = "something123", Rating = 5, Comment = dto.Comment, CreatedAt = DateTime.UtcNow.AddDays(-5), IsVerifiedPurchase = dto.IsVerifiedPurchase };
+            var updated = new ProductReviewReadDTO { ProductId = referenceId, UserId = "something123", Rating = 5, Comment = dto.Comment, CreatedAt = DateTime.UtcNow.AddDays(-5), IsVerifiedPurchase = dto.IsVerifiedPurchase };
 
             _mockService.Setup(s => s.UpdateAsync(dto)).ReturnsAsync(true);
 
             // Act
-            var result = await _controller.Update(dto);
+            var act = await _controller.Update(dto);
 
             // Assert
-            result.Should().BeOfType<OkResult>();
+            act.Should().BeOfType<OkResult>();
         }
 
         [Fact]
@@ -136,10 +136,10 @@ namespace ProductAPI.Tests.Controllers
             _mockService.Setup(s => s.UpdateAsync(dto)).ReturnsAsync(false);
 
             // Act
-            var result = await _controller.Update(dto);
+            var act = await _controller.Update(dto);
 
             // Assert
-            result.Should().BeOfType<NotFoundResult>();
+            act.Should().BeOfType<NotFoundResult>();
         }
 
         #endregion
@@ -154,10 +154,10 @@ namespace ProductAPI.Tests.Controllers
             _mockService.Setup(s => s.DeleteAsync(id)).ReturnsAsync(true);
 
             // Act
-            var result = await _controller.Delete(id);
+            var act = await _controller.Delete(id);
 
             // Assert
-            result.Should().BeOfType<NoContentResult>();
+            act.Should().BeOfType<NoContentResult>();
         }
 
         [Fact]
@@ -168,10 +168,10 @@ namespace ProductAPI.Tests.Controllers
             _mockService.Setup(s => s.DeleteAsync(id)).ReturnsAsync(false);
 
             // Act
-            var result = await _controller.Delete(id);
+            var act = await _controller.Delete(id);
 
             // Assert
-            result.Should().BeOfType<NotFoundResult>();
+            act.Should().BeOfType<NotFoundResult>();
         }
 
         #endregion
