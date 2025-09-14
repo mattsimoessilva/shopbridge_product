@@ -3,6 +3,7 @@ using ProductAPI.Data;
 using ProductAPI.Models;
 using ProductAPI.Models.Entities;
 using ProductAPI.Repositories.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ProductAPI.Repositories
 {
@@ -15,9 +16,12 @@ namespace ProductAPI.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(ProductVariant productVariant)
+        public async Task AddAsync(ProductVariant entity)
         {
-            await _context.ProductVariants.AddAsync(productVariant);
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            await _context.ProductVariants.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
@@ -30,15 +34,23 @@ namespace ProductAPI.Repositories
 
         public async Task<ProductVariant?> GetByIdAsync(Guid id)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException(
+                    "Id cannot be an empty GUID",
+                    nameof(id));
+
             return await _context.ProductVariants
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<bool> UpdateAsync(ProductVariant updatedProductVariant)
+        public async Task<bool> UpdateAsync(ProductVariant updated)
         {
-            var existingProductVariant = await _context.ProductVariants.FirstOrDefaultAsync(p => p.Id == updatedProductVariant.Id);
-            if (existingProductVariant == null) return false;
+            if (updated == null)
+                throw new ArgumentNullException(nameof(updated));
+
+            var existing = await _context.ProductVariants.FirstOrDefaultAsync(p => p.Id == updated.Id);
+            if (existing == null) return false;
 
             await _context.SaveChangesAsync();
             return true;
@@ -46,10 +58,15 @@ namespace ProductAPI.Repositories
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var productVariant = await _context.ProductVariants.FirstOrDefaultAsync(p => p.Id == id);
-            if (productVariant == null) return false;
+            if (id == Guid.Empty)
+                throw new ArgumentException(
+                    "Id cannot be an empty GUID",
+                    nameof(id));
 
-            _context.ProductVariants.Remove(productVariant);
+            var entity = await _context.ProductVariants.FirstOrDefaultAsync(p => p.Id == id);
+            if (entity == null) return false;
+
+            _context.ProductVariants.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
         }

@@ -11,6 +11,8 @@ namespace ProductAPI.Models.Profiles
             CreateMap<ProductVariant, ProductVariantReadDTO>();
             CreateMap<ProductVariantCreateDTO, ProductVariant>();
             CreateMap<ProductVariantUpdateDTO, ProductVariant>();
+            CreateMap<ProductVariant, ProductVariant>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }

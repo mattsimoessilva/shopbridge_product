@@ -17,16 +17,16 @@ namespace ProductAPI.Repositories
             _mapper = mapper;
         }
 
-        public async Task<Product> AddAsync(Product product)
+        public async Task<Product> AddAsync(Product entity)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
 
-            await _context.Products.AddAsync(product);
+            await _context.Products.AddAsync(entity);
 
             await _context.SaveChangesAsync();
 
-            return product;
+            return entity;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
@@ -50,19 +50,19 @@ namespace ProductAPI.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<bool> UpdateAsync(Product updatedProduct)
+        public async Task<bool> UpdateAsync(Product updated)
         {
-            if (updatedProduct == null)
-                throw new ArgumentNullException(nameof(updatedProduct));
+            if (updated == null)
+                throw new ArgumentNullException(nameof(updated));
 
-            var existingProduct = await _context.Products
+            var existing = await _context.Products
                 .Include(p => p.Variants)
-                .FirstOrDefaultAsync(p => p.Id == updatedProduct.Id);
+                .FirstOrDefaultAsync(p => p.Id == updated.Id);
 
-            if (existingProduct == null)
+            if (existing == null)
                 return false;
 
-            _mapper.Map(updatedProduct, existingProduct);
+            _mapper.Map(updated, existing);
 
             await _context.SaveChangesAsync();
             return true;
@@ -75,10 +75,10 @@ namespace ProductAPI.Repositories
                     "Id cannot be an empty GUID",
                     nameof(id));
 
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if (product == null) return false;
+            var entity = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (entity == null) return false;
 
-            _context.Products.Remove(product);
+            _context.Products.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
         }

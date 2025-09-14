@@ -3,6 +3,7 @@ using ProductAPI.Data;
 using ProductAPI.Models;
 using ProductAPI.Models.Entities;
 using ProductAPI.Repositories.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ProductAPI.Repositories
 {
@@ -15,9 +16,12 @@ namespace ProductAPI.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(ProductReview productReview)
+        public async Task AddAsync(ProductReview entity)
         {
-            await _context.ProductReviews.AddAsync(productReview);
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            await _context.ProductReviews.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
@@ -30,15 +34,23 @@ namespace ProductAPI.Repositories
 
         public async Task<ProductReview?> GetByIdAsync(Guid id)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException(
+                    "Id cannot be an empty GUID",
+                    nameof(id));
+
             return await _context.ProductReviews
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<bool> UpdateAsync(ProductReview updatedProductReview)
+        public async Task<bool> UpdateAsync(ProductReview updated)
         {
-            var existingProductReview = await _context.ProductReviews.FirstOrDefaultAsync(p => p.Id == updatedProductReview.Id);
-            if (existingProductReview == null) return false;
+            if (updated == null)
+                throw new ArgumentNullException(nameof(updated));
+
+            var existing = await _context.ProductReviews.FirstOrDefaultAsync(p => p.Id == updated.Id);
+            if (existing == null) return false;
 
             await _context.SaveChangesAsync();
             return true;
@@ -46,10 +58,15 @@ namespace ProductAPI.Repositories
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var productReview = await _context.ProductReviews.FirstOrDefaultAsync(p => p.Id == id);
-            if (productReview == null) return false;
+            if (id == Guid.Empty)
+                throw new ArgumentException(
+                    "Id cannot be an empty GUID",
+                    nameof(id));
 
-            _context.ProductReviews.Remove(productReview);
+            var entity = await _context.ProductReviews.FirstOrDefaultAsync(p => p.Id == id);
+            if (entity == null) return false;
+
+            _context.ProductReviews.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
         }
