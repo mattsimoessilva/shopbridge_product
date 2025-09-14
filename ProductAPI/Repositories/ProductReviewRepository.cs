@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ProductAPI.Data;
 using ProductAPI.Models;
 using ProductAPI.Models.Entities;
@@ -10,10 +11,11 @@ namespace ProductAPI.Repositories
     public class ProductReviewRepository : IProductReviewRepository
     {
         private readonly ProductAppDbContext _context;
-
-        public ProductReviewRepository(ProductAppDbContext context)
+        private readonly IMapper _mapper;
+        public ProductReviewRepository(ProductAppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<ProductReview>  AddAsync(ProductReview entity)
@@ -43,6 +45,7 @@ namespace ProductAPI.Repositories
 
             return await _context.ProductReviews
                 .AsNoTracking()
+                .Include(p => p.Product)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -53,6 +56,8 @@ namespace ProductAPI.Repositories
 
             var existing = await _context.ProductReviews.FirstOrDefaultAsync(p => p.Id == updated.Id);
             if (existing == null) return false;
+
+            _mapper.Map(updated, existing);
 
             await _context.SaveChangesAsync();
             return true;

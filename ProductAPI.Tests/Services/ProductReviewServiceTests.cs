@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Moq;
-using ProductAPI.Models.DTOs.Product;
 using ProductAPI.Models.DTOs.ProductReview;
-using ProductAPI.Models.DTOs.ProductVariant;
 using ProductAPI.Models.Entities;
 using ProductAPI.Repositories.Interfaces;
 using ProductAPI.Services;

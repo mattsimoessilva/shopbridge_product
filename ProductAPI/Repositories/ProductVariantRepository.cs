@@ -1,19 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductAPI.Data;
-using ProductAPI.Models;
+using AutoMapper;
 using ProductAPI.Models.Entities;
 using ProductAPI.Repositories.Interfaces;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ProductAPI.Repositories
 {
     public class ProductVariantRepository : IProductVariantRepository
     {
         private readonly ProductAppDbContext _context;
-
-        public ProductVariantRepository(ProductAppDbContext context)
+        private readonly IMapper _mapper;
+        public ProductVariantRepository(ProductAppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task AddAsync(ProductVariant entity)
@@ -51,6 +51,8 @@ namespace ProductAPI.Repositories
 
             var existing = await _context.ProductVariants.FirstOrDefaultAsync(p => p.Id == updated.Id);
             if (existing == null) return false;
+
+            _mapper.Map(updated, existing);
 
             await _context.SaveChangesAsync();
             return true;
