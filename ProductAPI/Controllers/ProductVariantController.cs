@@ -11,11 +11,11 @@ namespace ProductAPI.Controllers
     [Route("api/[controller]")]
     public class ProductVariantController : ControllerBase
     {
-        private readonly IProductVariantService _productVariantService;
+        private readonly IProductVariantService _service;
 
-        public ProductVariantController(IProductVariantService productVariantService)
+        public ProductVariantController(IProductVariantService service)
         {
-            _productVariantService = productVariantService;
+            _service = service;
         }
 
         [HttpPost]
@@ -25,8 +25,19 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Create([FromBody] ProductVariantCreateDTO dto)
         {
-            var result = await _productVariantService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var result = await _service.CreateAsync(dto);
+
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { error = ex.ParamName + " cannot be null" });
+            }
         }
 
         [HttpGet]
@@ -34,8 +45,15 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<ProductVariantReadDTO>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _productVariantService.GetAllAsync();
-            return Ok(result);
+            try
+            {
+                var result = await _service.GetAllAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]
@@ -44,9 +62,17 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _productVariantService.GetByIdAsync(id);
-            if (result == null) return NotFound();
-            return Ok(result);
+            try
+            {
+                var dto = await _service.GetByIdAsync(id);
+                if (dto == null)
+                    return NotFound();
+                return Ok(dto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
         }
 
         [HttpPut]
@@ -57,8 +83,25 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update([FromBody] ProductVariantUpdateDTO dto)
         {
-            var result = await _productVariantService.UpdateAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var success = await _service.UpdateAsync(dto);
+                if (!success)
+                    return NotFound();
+
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.ParamName + " is invalid." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
@@ -68,9 +111,17 @@ namespace ProductAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _productVariantService.DeleteAsync(id);
-            if (!result) return NotFound();
-            return NoContent();
+            try
+            {
+                var deleted = await _service.DeleteAsync(id);
+                if (!deleted)
+                    return NotFound();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
         }
     }
 }
