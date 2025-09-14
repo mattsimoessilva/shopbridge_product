@@ -16,13 +16,15 @@ namespace ProductAPI.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(ProductReview entity)
+        public async Task<ProductReview>  AddAsync(ProductReview entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             await _context.ProductReviews.AddAsync(entity);
             await _context.SaveChangesAsync();
+
+            return entity;
         }
 
         public async Task<IEnumerable<ProductReview>> GetAllAsync()

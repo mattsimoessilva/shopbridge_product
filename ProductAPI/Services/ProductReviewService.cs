@@ -48,7 +48,7 @@ namespace ProductAPI.Services
         public async Task<ProductReviewReadDTO?> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("Invalid product review ID", nameof(id));
+                throw new ArgumentException("Invalid ID", nameof(id));
 
             var productReview = await _productReviewRepository.GetByIdAsync(id);
 
@@ -61,7 +61,7 @@ namespace ProductAPI.Services
         public async Task<bool> UpdateAsync(ProductReviewUpdateDTO dto)
         {
             if (dto == null || dto.Id == Guid.Empty)
-                throw new ArgumentException("Invalid product review update data.");
+                throw new ArgumentException("Invalid update data.");
 
             var existingProductReview = await _productReviewRepository.GetByIdAsync(dto.Id);
             if (existingProductReview == null)

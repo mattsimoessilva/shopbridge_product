@@ -163,7 +163,7 @@ namespace ProductAPI.Tests.Services
             Func<Task> result = async () => await _productService.GetByIdAsync(emptyId);
 
             // Assert
-            await result.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid product ID (Parameter 'id')");
+            await result.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid ID (Parameter 'id')");
         }
 
         [Fact]
@@ -220,8 +220,8 @@ namespace ProductAPI.Tests.Services
             Func<Task> actWithEmptyId = async () => await _productService.UpdateAsync(emptyIdDTO);
 
             // Assert
-            await actWithEmptyId.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid product update data.");
-            await actWithEmptyId.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid product update data.");
+            await actWithEmptyId.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid update data.");
+            await actWithEmptyId.Should().ThrowAsync<ArgumentException>().WithMessage("Invalid update data.");
         }
 
         [Fact]

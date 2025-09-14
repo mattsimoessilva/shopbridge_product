@@ -47,7 +47,7 @@ namespace ProductAPI.Services
         public async Task<ProductVariantReadDTO?> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("Invalid product variant ID", nameof(id));
+                throw new ArgumentException("Invalid ID", nameof(id));
 
             var productVariant = await _productVariantRepository.GetByIdAsync(id);
 
@@ -60,7 +60,7 @@ namespace ProductAPI.Services
         public async Task<bool> UpdateAsync(ProductVariantUpdateDTO dto)
         {
             if (dto == null || dto.Id == Guid.Empty)
-                throw new ArgumentException("Invalid product variant update data.");
+                throw new ArgumentException("Invalid update data.");
 
             var existingProductVariant = await _productVariantRepository.GetByIdAsync(dto.Id);
             if (existingProductVariant == null)

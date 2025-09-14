@@ -73,7 +73,7 @@ namespace ProductAPI.Tests.Repositories
             await act
                 .Should()
                 .ThrowAsync<ArgumentNullException>()
-                .WithParameterName("product");
+                .WithParameterName("entity");
 
             var allProducts = await context.Products.ToListAsync();
             allProducts.Should().BeEmpty();
