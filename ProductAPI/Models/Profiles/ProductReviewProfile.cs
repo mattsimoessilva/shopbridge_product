@@ -11,6 +11,8 @@ namespace ProductAPI.Models.Profiles
             CreateMap<ProductReview, ProductReviewReadDTO>();
             CreateMap<ProductReviewCreateDTO, ProductReview>();
             CreateMap<ProductReviewUpdateDTO, ProductReview>();
+            CreateMap<ProductReview, ProductReview>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }
