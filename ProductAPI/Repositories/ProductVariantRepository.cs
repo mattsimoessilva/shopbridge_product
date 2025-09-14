@@ -16,13 +16,15 @@ namespace ProductAPI.Repositories
             _mapper = mapper;
         }
 
-        public async Task AddAsync(ProductVariant entity)
+        public async Task<ProductVariant> AddAsync(ProductVariant entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             await _context.ProductVariants.AddAsync(entity);
             await _context.SaveChangesAsync();
+
+            return entity;
         }
 
         public async Task<IEnumerable<ProductVariant>> GetAllAsync()

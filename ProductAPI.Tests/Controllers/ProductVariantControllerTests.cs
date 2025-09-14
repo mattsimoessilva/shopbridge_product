@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ProductAPI.Controllers;
 using ProductAPI.Models.DTOs.ProductVariant;
-using ProductAPI.Models.Entities;
 using ProductAPI.Services.Interfaces;
 
 
