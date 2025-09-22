@@ -51,7 +51,7 @@ builder.Services.AddSwaggerGen(c =>
         Description = "An ASP.NET Core Web API for managing products in the ShopBridge system.",
         Contact = new OpenApiContact
         {
-            Name = "Matheus Simões",
+            Name = "Matheus Sim es",
             Email = "matheussimoesdasilva@outlook.com"
         }
     });
