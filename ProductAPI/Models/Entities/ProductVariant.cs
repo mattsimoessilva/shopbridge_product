@@ -25,7 +25,7 @@ namespace ProductAPI.Models.Entities
         [MaxLength(50)]
         public required string Size { get; set; }
 
-        public decimal? AdditionalPrice { get; set; }
+        public decimal? Price { get; set; }
 
         public int StockQuantity { get; set; }
 
@@ -37,5 +37,9 @@ namespace ProductAPI.Models.Entities
         public required string ImageUrl { get; set; }
 
         public bool IsActive { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime? UpdatedAt { get; set; }
     }
 }

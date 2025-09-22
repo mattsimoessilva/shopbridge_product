@@ -9,5 +9,8 @@ namespace ProductAPI.Services.Interfaces
         public Task<ProductVariantReadDTO?> GetByIdAsync(Guid id);
         public Task<bool> UpdateAsync(ProductVariantUpdateDTO dto);
         public Task<bool> DeleteAsync(Guid id);
+        Task<bool> ReserveStockAsync(Guid productId, int quantity);
+        Task<bool> ReleaseStockAsync(Guid productId, int quantity);
+        Task<bool> ReduceStockAsync(Guid productId, int quantity);
     }
 }

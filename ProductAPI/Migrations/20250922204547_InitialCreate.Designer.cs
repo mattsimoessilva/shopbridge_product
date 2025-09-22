@@ -11,7 +11,7 @@ using ProductAPI.Data;
 namespace ProductAPI.Migrations
 {
     [DbContext(typeof(ProductAppDbContext))]
-    [Migration("20250922191709_InitialCreate")]
+    [Migration("20250922204547_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -149,12 +149,12 @@ namespace ProductAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal?>("AdditionalPrice")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Color")
                         .IsRequired()
                         .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
@@ -163,6 +163,9 @@ namespace ProductAPI.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("TEXT");
@@ -177,6 +180,9 @@ namespace ProductAPI.Migrations
 
                     b.Property<int>("StockQuantity")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("VariantName")
                         .IsRequired()

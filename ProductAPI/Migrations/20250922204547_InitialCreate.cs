@@ -75,11 +75,13 @@ namespace ProductAPI.Migrations
                     VariantName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Color = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     Size = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    AdditionalPrice = table.Column<decimal>(type: "TEXT", nullable: true),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: true),
                     StockQuantity = table.Column<int>(type: "INTEGER", nullable: false),
                     ReservedStockQuantity = table.Column<int>(type: "INTEGER", nullable: false),
                     ImageUrl = table.Column<string>(type: "TEXT", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

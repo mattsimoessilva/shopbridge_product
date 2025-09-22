@@ -14,9 +14,13 @@ namespace ProductAPI.Models.DTOs.ProductVariant
 
         public required string Size { get; set; }
 
-        public decimal? AdditionalPrice { get; set; }
+        public decimal? Price { get; set; }
 
         public int StockQuantity { get; set; }
+
+        public int ReservedStockQuantity { get; set; }
+
+        public int AvailableStock => StockQuantity - ReservedStockQuantity;
 
         public required string ImageUrl { get; set; }
 

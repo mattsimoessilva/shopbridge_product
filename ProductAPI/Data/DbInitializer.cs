@@ -37,30 +37,31 @@ namespace ProductAPI.Data
                 {
                     variants.AddRange(
                     [
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "Compact Black", Color = "Black", Size = "Small", AdditionalPrice = 0, StockQuantity = 100, ImageUrl = "/images/products/wireless-mouse-black.jpg", IsActive = true },
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "Ergo Gray", Color = "Gray", Size = "Medium", AdditionalPrice = 10, StockQuantity = 80, ImageUrl = "/images/products/wireless-mouse-gray.jpg", IsActive = true },
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "Silent White", Color = "White", Size = "Large", AdditionalPrice = 5, StockQuantity = 60, ImageUrl = "/images/products/wireless-mouse-white.jpg", IsActive = true }
+                        new ProductVariant { Id = Guid.Parse("11111111-aaaa-4444-bbbb-000000000001"), ProductId = product.Id, Product = product, VariantName = "Compact Black", Color = "Black", Size = "Small", Price = 129.99m, StockQuantity = 100, ImageUrl = "/images/products/wireless-mouse-black.jpg", IsActive = true },
+                        new ProductVariant { Id = Guid.Parse("11111111-aaaa-4444-bbbb-000000000002"), ProductId = product.Id, Product = product, VariantName = "Ergo Gray", Color = "Gray", Size = "Medium", Price = 139.99m, StockQuantity = 80, ImageUrl = "/images/products/wireless-mouse-gray.jpg", IsActive = true },
+                        new ProductVariant { Id = Guid.Parse("11111111-aaaa-4444-bbbb-000000000003"), ProductId = product.Id, Product = product, VariantName = "Silent White", Color = "White", Size = "Large", Price = 134.99m, StockQuantity = 60, ImageUrl = "/images/products/wireless-mouse-white.jpg", IsActive = true }
                     ]);
                 }
                 else if (product.Name == "Mechanical Keyboard")
                 {
                     variants.AddRange(
                     [
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "RGB Black", Color = "Black", Size = "Full", AdditionalPrice = 0, StockQuantity = 50, ImageUrl = "/images/products/mechanical-keyboard-black.jpg", IsActive = true },
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "Silent White", Color = "White", Size = "Tenkeyless", AdditionalPrice = 20, StockQuantity = 40, ImageUrl = "/images/products/mechanical-keyboard-white.jpg", IsActive = true },
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "Compact Red", Color = "Red", Size = "60%", AdditionalPrice = -10, StockQuantity = 30, ImageUrl = "/images/products/mechanical-keyboard-red.jpg", IsActive = true }
+                        new ProductVariant { Id = Guid.Parse("22222222-bbbb-4444-cccc-000000000001"), ProductId = product.Id, Product = product, VariantName = "RGB Black", Color = "Black", Size = "Full", Price = 299.99m, StockQuantity = 50, ImageUrl = "/images/products/mechanical-keyboard-black.jpg", IsActive = true },
+                        new ProductVariant { Id = Guid.Parse("22222222-bbbb-4444-cccc-000000000002"), ProductId = product.Id, Product = product, VariantName = "Silent White", Color = "White", Size = "Tenkeyless", Price = 319.99m, StockQuantity = 40, ImageUrl = "/images/products/mechanical-keyboard-white.jpg", IsActive = true },
+                        new ProductVariant { Id = Guid.Parse("22222222-bbbb-4444-cccc-000000000003"), ProductId = product.Id, Product = product, VariantName = "Compact Red", Color = "Red", Size = "60%", Price = 289.99m, StockQuantity = 30, ImageUrl = "/images/products/mechanical-keyboard-red.jpg", IsActive = true }
                     ]);
                 }
                 else if (product.Name == "Gaming Headset")
                 {
                     variants.AddRange(
                     [
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true },
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "Neon Green", Color = "Green", Size = "Large", AdditionalPrice = 15, StockQuantity = 50, ImageUrl = "/images/products/gaming-headset-green.jpg", IsActive = true },
-                        new ProductVariant { Id = Guid.NewGuid(), ProductId = product.Id, Product = product, VariantName = "White Noise", Color = "White", Size = "Standard", AdditionalPrice = 10, StockQuantity = 40, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true }
+                        new ProductVariant { Id = Guid.Parse("33333333-cccc-4444-dddd-000000000001"), ProductId = product.Id, Product = product, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 199.99m, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true },
+                        new ProductVariant { Id = Guid.Parse("33333333-cccc-4444-dddd-000000000002"), ProductId = product.Id, Product = product, VariantName = "Neon Green", Color = "Green", Size = "Large", Price = 214.99m, StockQuantity = 50, ImageUrl = "/images/products/gaming-headset-green.jpg", IsActive = true },
+                        new ProductVariant { Id = Guid.Parse("33333333-cccc-4444-dddd-000000000003"), ProductId = product.Id, Product = product, VariantName = "White Noise", Color = "White", Size = "Standard", Price = 209.99m, StockQuantity = 40, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true }
                     ]);
                 }
             }
+
 
             context.ProductVariants.AddRange(variants);
             context.SaveChanges();

@@ -18,7 +18,7 @@ namespace ProductAPI.Models.DTOs.ProductVariant
         public required string Size { get; set; }
 
         [Range(0.00, double.MaxValue)]
-        public decimal? AdditionalPrice { get; set; }
+        public decimal? Price { get; set; }
 
         public int StockQuantity { get; set; }
 

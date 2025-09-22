@@ -3,6 +3,7 @@ using ProductAPI.Models;
 using ProductAPI.Models.DTOs.Product;
 using ProductAPI.Models.DTOs.ProductVariant;
 using ProductAPI.Models.Entities;
+using ProductAPI.Repositories;
 using ProductAPI.Repositories.Interfaces;
 using ProductAPI.Services.Interfaces;
 
@@ -10,12 +11,12 @@ namespace ProductAPI.Services
 {
     public class ProductVariantService : IProductVariantService
     {
-        private readonly IProductVariantRepository _productVariantRepository;
+        private readonly IProductVariantRepository _repository;
         private readonly IMapper _mapper;
 
-        public ProductVariantService(IProductVariantRepository productVariantRepository, IMapper mapper)
+        public ProductVariantService(IProductVariantRepository entityRepository, IMapper mapper)
         {
-            _productVariantRepository = productVariantRepository;
+            _repository = entityRepository;
             _mapper = mapper;
         }
 
@@ -24,22 +25,23 @@ namespace ProductAPI.Services
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            var productVariant = _mapper.Map<ProductVariant>(dto);
-            productVariant.Id = Guid.NewGuid();
+            var entity = _mapper.Map<ProductVariant>(dto);
+            entity.Id = Guid.NewGuid();
+            entity.CreatedAt = DateTime.UtcNow;
 
-            await _productVariantRepository.AddAsync(productVariant);
+            await _repository.AddAsync(entity);
 
-            return _mapper.Map<ProductVariantReadDTO>(productVariant);
+            return _mapper.Map<ProductVariantReadDTO>(entity);
         }
 
         public async Task<IEnumerable<ProductVariantReadDTO>> GetAllAsync()
         {
-            var productVariants = await _productVariantRepository.GetAllAsync();
+            var entities = await _repository.GetAllAsync();
 
-            if (productVariants == null || !productVariants.Any())
+            if (entities == null || !entities.Any())
                 return Enumerable.Empty<ProductVariantReadDTO>();
 
-            var result = _mapper.Map<IEnumerable<ProductVariantReadDTO>>(productVariants);
+            var result = _mapper.Map<IEnumerable<ProductVariantReadDTO>>(entities);
 
             return result;
         }
@@ -49,12 +51,12 @@ namespace ProductAPI.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Invalid ID", nameof(id));
 
-            var productVariant = await _productVariantRepository.GetByIdAsync(id);
+            var entity = await _repository.GetByIdAsync(id);
 
-            if (productVariant is null)
+            if (entity is null)
                 return null;
 
-            return _mapper.Map<ProductVariantReadDTO>(productVariant);
+            return _mapper.Map<ProductVariantReadDTO>(entity);
         }
 
         public async Task<bool> UpdateAsync(ProductVariantUpdateDTO dto)
@@ -62,17 +64,80 @@ namespace ProductAPI.Services
             if (dto == null || dto.Id == Guid.Empty)
                 throw new ArgumentException("Invalid update data.");
 
-            var existingProductVariant = await _productVariantRepository.GetByIdAsync(dto.Id);
-            if (existingProductVariant == null)
+            var existing = await _repository.GetByIdAsync(dto.Id);
+            if (existing == null)
                 return false;
 
-            _mapper.Map(dto, existingProductVariant);
+            _mapper.Map(dto, existing);
+            existing.UpdatedAt = DateTime.UtcNow;
 
-            await _productVariantRepository.UpdateAsync(existingProductVariant);
+            await _repository.UpdateAsync(existing);
 
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id) => await _productVariantRepository.DeleteAsync(id);
+        public async Task<bool> DeleteAsync(Guid id) => await _repository.DeleteAsync(id);
+
+        public async Task<bool> ReserveStockAsync(Guid id, int quantity)
+        {
+            if (id == Guid.Empty || quantity <= 0)
+                throw new ArgumentException("Invalid entity ID or quantity.");
+
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+                return false;
+
+            var availableStock = entity.StockQuantity - entity.ReservedStockQuantity;
+            if (availableStock < quantity)
+                throw new InvalidOperationException("Not enough stock available to reserve.");
+
+            entity.ReservedStockQuantity += quantity;
+            entity.UpdatedAt = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(entity);
+            return true;
+        }
+
+        public async Task<bool> ReleaseStockAsync(Guid id, int quantity)
+        {
+            if (id == Guid.Empty || quantity <= 0)
+                throw new ArgumentException("Invalid entity ID or quantity.");
+
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+                return false;
+
+            if (entity.ReservedStockQuantity < quantity)
+                throw new InvalidOperationException("Cannot release more stock than is reserved.");
+
+            entity.ReservedStockQuantity -= quantity;
+            entity.UpdatedAt = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(entity);
+            return true;
+        }
+
+        public async Task<bool> ReduceStockAsync(Guid id, int quantity)
+        {
+            if (id == Guid.Empty || quantity <= 0)
+                throw new ArgumentException("Invalid entity ID or quantity.");
+
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+                return false;
+
+            if (entity.ReservedStockQuantity < quantity)
+                throw new InvalidOperationException("Cannot reduce more stock than is reserved.");
+
+            if (entity.StockQuantity < quantity)
+                throw new InvalidOperationException("Not enough total stock to reduce.");
+
+            entity.StockQuantity -= quantity;
+            entity.ReservedStockQuantity -= quantity;
+            entity.UpdatedAt = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(entity);
+            return true;
+        }
     }
 }
