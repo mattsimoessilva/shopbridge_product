@@ -33,6 +33,11 @@ namespace ProductAPI.Models.Entities
 
         public int StockQuantity { get; set; }
 
+        public int ReservedStockQuantity { get; set; } = 0;
+
+        [NotMapped]
+        public int AvailableStock => StockQuantity - ReservedStockQuantity;
+
         public int MinimumStockThreshold { get; set; }
 
         public bool AllowBackorder { get; set; }

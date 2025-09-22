@@ -74,5 +74,67 @@ namespace ProductAPI.Services
         }
 
         public async Task<bool> DeleteAsync(Guid id) => await _productRepository.DeleteAsync(id);
+
+        public async Task<bool> ReserveStockAsync(Guid productId, int quantity)
+        {
+            if (productId == Guid.Empty || quantity <= 0)
+                throw new ArgumentException("Invalid product ID or quantity.");
+
+            var product = await _productRepository.GetByIdAsync(productId);
+            if (product == null)
+                return false;
+
+            var availableStock = product.StockQuantity - product.ReservedStockQuantity;
+            if (availableStock < quantity)
+                throw new InvalidOperationException("Not enough stock available to reserve.");
+
+            product.ReservedStockQuantity += quantity;
+            product.UpdatedAt = DateTime.UtcNow;
+
+            await _productRepository.UpdateAsync(product);
+            return true;
+        }
+
+        public async Task<bool> ReleaseStockAsync(Guid productId, int quantity)
+        {
+            if (productId == Guid.Empty || quantity <= 0)
+                throw new ArgumentException("Invalid product ID or quantity.");
+
+            var product = await _productRepository.GetByIdAsync(productId);
+            if (product == null)
+                return false;
+
+            if (product.ReservedStockQuantity < quantity)
+                throw new InvalidOperationException("Cannot release more stock than is reserved.");
+
+            product.ReservedStockQuantity -= quantity;
+            product.UpdatedAt = DateTime.UtcNow;
+
+            await _productRepository.UpdateAsync(product);
+            return true;
+        }
+
+        public async Task<bool> ReduceStockAsync(Guid productId, int quantity)
+        {
+            if (productId == Guid.Empty || quantity <= 0)
+                throw new ArgumentException("Invalid product ID or quantity.");
+
+            var product = await _productRepository.GetByIdAsync(productId);
+            if (product == null)
+                return false;
+
+            if (product.ReservedStockQuantity < quantity)
+                throw new InvalidOperationException("Cannot reduce more stock than is reserved.");
+
+            if (product.StockQuantity < quantity)
+                throw new InvalidOperationException("Not enough total stock to reduce.");
+
+            product.StockQuantity -= quantity;
+            product.ReservedStockQuantity -= quantity;
+            product.UpdatedAt = DateTime.UtcNow;
+
+            await _productRepository.UpdateAsync(product);
+            return true;
+        }
     }
 }

@@ -65,6 +65,9 @@ namespace ProductAPI.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ReservedStockQuantity")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("SKU")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -160,6 +163,9 @@ namespace ProductAPI.Migrations
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("ReservedStockQuantity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Size")
                         .IsRequired()

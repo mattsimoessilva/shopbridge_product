@@ -11,7 +11,7 @@ using ProductAPI.Data;
 namespace ProductAPI.Migrations
 {
     [DbContext(typeof(ProductAppDbContext))]
-    [Migration("20250916015545_InitialCreate")]
+    [Migration("20250922191709_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -67,6 +67,9 @@ namespace ProductAPI.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("ReservedStockQuantity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SKU")
                         .IsRequired()
@@ -163,6 +166,9 @@ namespace ProductAPI.Migrations
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("ReservedStockQuantity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Size")
                         .IsRequired()

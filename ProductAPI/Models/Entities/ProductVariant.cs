@@ -29,6 +29,11 @@ namespace ProductAPI.Models.Entities
 
         public int StockQuantity { get; set; }
 
+        public int ReservedStockQuantity { get; set; } = 0;
+
+        [NotMapped]
+        public int AvailableStock => StockQuantity - ReservedStockQuantity;
+
         public required string ImageUrl { get; set; }
 
         public bool IsActive { get; set; }

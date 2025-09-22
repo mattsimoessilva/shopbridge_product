@@ -27,8 +27,6 @@ namespace ProductAPI.Models.DTOs.Product
 
         public bool IsFeatured { get; set; }
 
-        public int StockQuantity { get; set; }
-
         public int MinimumStockThreshold { get; set; }
 
         public bool AllowBackorder { get; set; }

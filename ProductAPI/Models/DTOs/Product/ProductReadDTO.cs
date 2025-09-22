@@ -1,7 +1,8 @@
-using System;
-using System.Collections.Generic;
 using ProductAPI.Models.DTOs.ProductReview;
 using ProductAPI.Models.DTOs.ProductVariant;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
 
 namespace ProductAPI.Models.DTOs.Product
 {
@@ -26,6 +27,10 @@ namespace ProductAPI.Models.DTOs.Product
         public required string SKU { get; set; }
 
         public int StockQuantity { get; set; }
+
+        public int ReservedStockQuantity { get; set; }
+
+        public int AvailableStock => StockQuantity - ReservedStockQuantity;
 
         public int MinimumStockThreshold { get; set; }
 

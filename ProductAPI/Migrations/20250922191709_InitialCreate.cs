@@ -25,6 +25,7 @@ namespace ProductAPI.Migrations
                     IsFeatured = table.Column<bool>(type: "INTEGER", nullable: false),
                     SKU = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     StockQuantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    ReservedStockQuantity = table.Column<int>(type: "INTEGER", nullable: false),
                     MinimumStockThreshold = table.Column<int>(type: "INTEGER", nullable: false),
                     AllowBackorder = table.Column<bool>(type: "INTEGER", nullable: false),
                     Brand = table.Column<string>(type: "TEXT", nullable: false),
@@ -76,6 +77,7 @@ namespace ProductAPI.Migrations
                     Size = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     AdditionalPrice = table.Column<decimal>(type: "TEXT", nullable: true),
                     StockQuantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    ReservedStockQuantity = table.Column<int>(type: "INTEGER", nullable: false),
                     ImageUrl = table.Column<string>(type: "TEXT", nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
