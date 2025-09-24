@@ -36,23 +36,6 @@ shopbridge_product/
 
 The **Product Service** follows a layered architecture to ensure separation of concerns, scalability, and maintainability.
 
-### Key Design Principles
-- **Layered Architecture**: Controllers → Services → Repositories → Database
-- **Domain-Driven Design (DDD) Lite**: Models and DTOs represent business entities clearly.
-- **Persistence**: EF Core with SQLite for local development; easily swappable for other providers.
-- **RESTful API**: Follows standard HTTP verbs and status codes.
-- **Microservices Ready**: Designed to run independently and integrate via Docker networking.
-
-### Design Decisions
-- **Controllers** handle HTTP requests and delegate logic to services.  
-- **Services** encapsulate business rules and orchestrate data flow.  
-- **Repositories** abstract persistence, making the service database-agnostic.  
-- **Migrations** ensure schema evolution is tracked and reproducible.  
-- **Tests** validate each layer independently (unit + integration).  
-
-
-## Service Architecture Overview
-
 <p align="center">
 
 ```mermaid
@@ -78,6 +61,21 @@ flowchart TD
 ```
 
 </p>
+
+
+### Key Design Principles
+- **Layered Architecture**: Controllers → Services → Repositories → Database
+- **Domain-Driven Design (DDD) Lite**: Models and DTOs represent business entities clearly.
+- **Persistence**: EF Core with SQLite for local development; easily swappable for other providers.
+- **RESTful API**: Follows standard HTTP verbs and status codes.
+- **Microservices Ready**: Designed to run independently and integrate via Docker networking.
+
+### Design Decisions
+- **Controllers** handle HTTP requests and delegate logic to services.  
+- **Services** encapsulate business rules and orchestrate data flow.  
+- **Repositories** abstract persistence, making the service database-agnostic.  
+- **Migrations** ensure schema evolution is tracked and reproducible.  
+- **Tests** validate each layer independently (unit + integration).  
 
 ---
 
