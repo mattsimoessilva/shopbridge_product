@@ -203,7 +203,7 @@ dotnet test --filter FullyQualifiedName~Namespace.ClassName.MethodName
 | POST   | `/api/product-variants/{id}/reserve`  | Reserves stock                             |
 | POST   | `/api/product-variants/{id}/release`  | Releases previously reserved stock         |
 | PATCH  | `/api/product-variants/{id}/quantity` | Reduces stock permanently                  |
-         |
+         
 
 All endpoints follow REST conventions and return appropriate HTTP status codes (200, 201, 204, 400, 404, 500) with JSON payloads.
 
