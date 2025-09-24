@@ -49,9 +49,9 @@ namespace ProductApplication.Tests.Services
             var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
 
             var id = Guid.NewGuid();
-            var createDTO = new ProductVariantCreateDTO { ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
-            var entity = new ProductVariant { Id = id, Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
-            var readDTO = new ProductVariantReadDTO { Id = id, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var createDTO = new ProductVariantCreateDTO { ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var entity = new ProductVariant { Id = id, Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var readDTO = new ProductVariantReadDTO { Id = id, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             _mapperMock.Setup(m => m.Map<ProductVariant>(createDTO)).Returns(entity);
             _mapperMock.Setup(m => m.Map<ProductVariantReadDTO>(entity)).Returns(readDTO);
@@ -75,8 +75,8 @@ namespace ProductApplication.Tests.Services
             var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
             
             var id = Guid.NewGuid();
-            var createDTO = new ProductVariantCreateDTO { ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
-            var entity = new ProductVariant { Id = id, Product = reference, ProductId = createDTO.ProductId, VariantName = createDTO.VariantName, Color = createDTO.Color, Size = createDTO.Size, AdditionalPrice = createDTO.AdditionalPrice, StockQuantity = createDTO.StockQuantity, ImageUrl = createDTO.ImageUrl, IsActive = createDTO.IsActive };
+            var createDTO = new ProductVariantCreateDTO { ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var entity = new ProductVariant { Id = id, Product = reference, ProductId = createDTO.ProductId, VariantName = createDTO.VariantName, Color = createDTO.Color, Size = createDTO.Size, Price = createDTO.Price, StockQuantity = createDTO.StockQuantity, ImageUrl = createDTO.ImageUrl, IsActive = createDTO.IsActive };
 
             _mapperMock.Setup(m => m.Map<ProductVariant>(createDTO)).Returns(entity);
             _repositoryMock.Setup(r => r.AddAsync(entity)).ThrowsAsync(new Exception("Repository failure."));
@@ -117,14 +117,14 @@ namespace ProductApplication.Tests.Services
 
             var entities = new List<ProductVariant>
             {
-                new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true },
-                new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Hel Edition", Color = "White", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true }
+                new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true },
+                new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Hel Edition", Color = "White", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true }
             };
 
             var dtos = new List<ProductVariantReadDTO>
             {
-                new ProductVariantReadDTO { Id = entities[0].Id, ProductId = entities[0].ProductId, VariantName = entities[0].VariantName, Color = entities[0].Color, Size = entities[0].Size, AdditionalPrice = entities[0].AdditionalPrice, StockQuantity = entities[0].StockQuantity, ImageUrl = entities[0].ImageUrl, IsActive = entities[0].IsActive },
-                new ProductVariantReadDTO { Id = entities[1].Id, ProductId = entities[1].ProductId, VariantName = entities[1].VariantName, Color = entities[1].Color, Size = entities[1].Size, AdditionalPrice = entities[1].AdditionalPrice, StockQuantity = entities[1].StockQuantity, ImageUrl = entities[1].ImageUrl, IsActive = entities[1].IsActive }
+                new ProductVariantReadDTO { Id = entities[0].Id, ProductId = entities[0].ProductId, VariantName = entities[0].VariantName, Color = entities[0].Color, Size = entities[0].Size, Price = entities[0].Price, StockQuantity = entities[0].StockQuantity, ImageUrl = entities[0].ImageUrl, IsActive = entities[0].IsActive },
+                new ProductVariantReadDTO { Id = entities[1].Id, ProductId = entities[1].ProductId, VariantName = entities[1].VariantName, Color = entities[1].Color, Size = entities[1].Size, Price = entities[1].Price, StockQuantity = entities[1].StockQuantity, ImageUrl = entities[1].ImageUrl, IsActive = entities[1].IsActive }
             };
 
             _repositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(entities);
@@ -178,8 +178,8 @@ namespace ProductApplication.Tests.Services
             var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
 
             var id = Guid.NewGuid();
-            var entity = new ProductVariant { Id = id, Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
-            var dto = new ProductVariantReadDTO { Id = entity.Id, ProductId = entity.ProductId, VariantName = entity.VariantName, Color = entity.Color, Size = entity.Size, AdditionalPrice = entity.AdditionalPrice, StockQuantity = entity.StockQuantity, ImageUrl = entity.ImageUrl, IsActive = entity.IsActive };
+            var entity = new ProductVariant { Id = id, Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var dto = new ProductVariantReadDTO { Id = entity.Id, ProductId = entity.ProductId, VariantName = entity.VariantName, Color = entity.Color, Size = entity.Size, Price = entity.Price, StockQuantity = entity.StockQuantity, ImageUrl = entity.ImageUrl, IsActive = entity.IsActive };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
             _mapperMock.Setup(m => m.Map<ProductVariantReadDTO>(entity)).Returns(dto);
@@ -219,7 +219,7 @@ namespace ProductApplication.Tests.Services
         {
             // Arrange
             ProductVariantUpdateDTO nullDTO = null;
-            var emptyIdDTO = new ProductVariantUpdateDTO { Id = Guid.Empty, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var emptyIdDTO = new ProductVariantUpdateDTO { Id = Guid.Empty, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             // Act
             Func<Task> actWithNull = async () => await _service.UpdateAsync(nullDTO);
@@ -236,8 +236,8 @@ namespace ProductApplication.Tests.Services
             // Arrange
             var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
 
-            var updateDTO = new ProductVariantUpdateDTO { Id = Guid.NewGuid(), VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
-            var existing = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Hel Edition", Color = "White", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true };
+            var updateDTO = new ProductVariantUpdateDTO { Id = Guid.NewGuid(), VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var existing = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Hel Edition", Color = "White", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(updateDTO.Id)).ReturnsAsync(existing);
             _mapperMock.Setup(m => m.Map(updateDTO, existing));
@@ -256,8 +256,8 @@ namespace ProductApplication.Tests.Services
             // Arrange
             var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
 
-            var dto = new ProductVariantUpdateDTO { Id = Guid.NewGuid(), VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
-            var existing = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Hel Edition", Color = "White", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true };
+            var dto = new ProductVariantUpdateDTO { Id = Guid.NewGuid(), VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var existing = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Hel Edition", Color = "White", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true };
 
             var exception = new Exception("Repository failure");
 

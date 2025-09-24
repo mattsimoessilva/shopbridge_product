@@ -42,7 +42,7 @@ namespace ProductApplication.Tests.Repositories
 
             var context = GetDbContext();
             var repository = GetRepository(context);
-            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             // Act
             var act = await repository.AddAsync(entity);
@@ -107,8 +107,8 @@ namespace ProductApplication.Tests.Repositories
 
             var entities = new List<ProductVariant>
             {
-                new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true },
-                new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Hel Edition", Color = "White", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true }
+                new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true },
+                new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Hel Edition", Color = "White", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true }
             };
 
             await context.SaveChangesAsync();
@@ -135,7 +135,7 @@ namespace ProductApplication.Tests.Repositories
             var context = GetDbContext();
             var repository = GetRepository(context);
             var id = Guid.NewGuid();
-            var entity = new ProductVariant { Id = id, Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var entity = new ProductVariant { Id = id, Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             context.ProductVariants.Add(entity);
             await context.SaveChangesAsync();
@@ -179,7 +179,7 @@ namespace ProductApplication.Tests.Repositories
             var context = GetDbContext();
             var repository = GetRepository(context);
             var id = Guid.NewGuid();
-            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             // Act
             var act = await repository.UpdateAsync(entity);
@@ -200,7 +200,7 @@ namespace ProductApplication.Tests.Repositories
             var context = GetDbContext();
             var repository = GetRepository(context);
             var id = Guid.NewGuid();
-            var entity = new ProductVariant { Id = id, Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var entity = new ProductVariant { Id = id, Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             context.ProductVariants.Add(entity);
             await context.SaveChangesAsync();
@@ -209,7 +209,7 @@ namespace ProductApplication.Tests.Repositories
             entity.VariantName = "Hel Edition";
             entity.Color = "White";
             entity.Size = "Standard";
-            entity.AdditionalPrice = 0;
+            entity.Price = 0;
             entity.StockQuantity = 80;
             entity.ImageUrl = "/images/products/gaming-headset-white.jpg";
             entity.IsActive = true;
@@ -253,7 +253,7 @@ namespace ProductApplication.Tests.Repositories
             var context = GetDbContext();
             var repository = GetRepository(context);
 
-            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             context.ProductVariants.Add(entity);
             await context.SaveChangesAsync();
@@ -275,7 +275,7 @@ namespace ProductApplication.Tests.Repositories
             var context = GetDbContext();
             var repository = GetRepository(context);
 
-            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             context.ProductVariants.Add(entity);
             await context.SaveChangesAsync();

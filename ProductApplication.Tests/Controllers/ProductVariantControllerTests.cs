@@ -26,8 +26,8 @@ namespace ProductApplication.Tests.Controllers
         {
             // Arrange
             var referenceId = Guid.NewGuid();
-            var dto = new ProductVariantCreateDTO { ProductId = referenceId, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
-            var created = new ProductVariantReadDTO { Id = Guid.NewGuid(), ProductId = referenceId, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var dto = new ProductVariantCreateDTO { ProductId = referenceId, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var created = new ProductVariantReadDTO { Id = Guid.NewGuid(), ProductId = referenceId, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             _mockService.Setup(s => s.CreateAsync(dto)).ReturnsAsync(created);
 
@@ -54,8 +54,8 @@ namespace ProductApplication.Tests.Controllers
 
             var entities = new List<ProductVariantReadDTO>
             {
-                new() { Id = Guid.NewGuid(), ProductId = referenceId, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true },
-                new() { Id = Guid.NewGuid(), ProductId = referenceId, VariantName = "Hel Edition", Color = "White", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true }
+                new() { Id = Guid.NewGuid(), ProductId = referenceId, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true },
+                new() { Id = Guid.NewGuid(), ProductId = referenceId, VariantName = "Hel Edition", Color = "White", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-white.jpg", IsActive = true }
             };
 
             _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(entities);
@@ -78,7 +78,7 @@ namespace ProductApplication.Tests.Controllers
         {
             // Arrange
             var referenceId = Guid.NewGuid();
-            var created = new ProductVariantReadDTO { Id = Guid.NewGuid(), ProductId = referenceId, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var created = new ProductVariantReadDTO { Id = Guid.NewGuid(), ProductId = referenceId, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             _mockService.Setup(s => s.GetByIdAsync(referenceId)).ReturnsAsync(created);
 
@@ -115,8 +115,8 @@ namespace ProductApplication.Tests.Controllers
             // Arrange
             var id = Guid.NewGuid();
             var referenceId = Guid.NewGuid();
-            var dto = new ProductVariantUpdateDTO { Id = id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
-            var updated = new ProductVariantReadDTO { Id = id, VariantName = dto.VariantName, Color = dto.Color, Size = dto.Size, AdditionalPrice = dto.AdditionalPrice, StockQuantity = dto.StockQuantity, ImageUrl = dto.ImageUrl, IsActive = dto.IsActive };
+            var dto = new ProductVariantUpdateDTO { Id = id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var updated = new ProductVariantReadDTO { Id = id, VariantName = dto.VariantName, Color = dto.Color, Size = dto.Size, Price = dto.Price, StockQuantity = dto.StockQuantity, ImageUrl = dto.ImageUrl, IsActive = dto.IsActive };
 
             _mockService.Setup(s => s.UpdateAsync(dto)).ReturnsAsync(true);
 
@@ -132,7 +132,7 @@ namespace ProductApplication.Tests.Controllers
         {
             // Arrange
             var id = Guid.NewGuid();
-            var dto = new ProductVariantUpdateDTO { Id = id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", AdditionalPrice = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+            var dto = new ProductVariantUpdateDTO { Id = id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 70, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             _mockService.Setup(s => s.UpdateAsync(dto)).ReturnsAsync(false);
 

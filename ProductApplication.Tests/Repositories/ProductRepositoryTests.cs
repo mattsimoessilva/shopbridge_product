@@ -176,7 +176,7 @@ namespace ProductApplication.Tests.Repositories
             context.Products.Add(entity);
             await context.SaveChangesAsync();
 
-            var firstReference = new ProductVariant { Id = Guid.NewGuid(), Product = entity, ProductId = id, VariantName = "RGB Edition", Color = "Black", Size = "Medium", AdditionalPrice = 20.00m, StockQuantity = 50, ImageUrl = "/images/variants/rgb.jpg", IsActive = true };
+            var firstReference = new ProductVariant { Id = Guid.NewGuid(), Product = entity, ProductId = id, VariantName = "RGB Edition", Color = "Black", Size = "Medium", Price = 20.00m, StockQuantity = 50, ImageUrl = "/images/variants/rgb.jpg", IsActive = true };
             var secondReference = new ProductReview { Id = Guid.NewGuid(), Product = entity, ProductId = id, UserId = "user123", Rating = 5, Comment = "Great entity!", IsVerifiedPurchase = true };
 
             context.ProductVariants.Add(firstReference);

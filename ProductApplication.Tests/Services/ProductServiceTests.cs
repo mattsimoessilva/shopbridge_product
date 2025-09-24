@@ -213,7 +213,7 @@ namespace ProductApplication.Tests.Services
         {
             // Arrange
             ProductUpdateDTO nullDTO = null;
-            var emptyIdDTO = new ProductUpdateDTO { Id = Guid.Empty, Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, StockQuantity = 40, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
+            var emptyIdDTO = new ProductUpdateDTO { Id = Guid.Empty, Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
 
             // Act
             Func<Task> actWithNull = async () => await _service.UpdateAsync(nullDTO);
@@ -228,7 +228,7 @@ namespace ProductApplication.Tests.Services
         public async Task UpdateAsync_ShouldReturnTrue_WhenUpdateIsSuccessful()
         {
             // Arrange
-            var updateDTO = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, StockQuantity = 40, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
+            var updateDTO = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
             var existing = new Product { Id = updateDTO.Id, Name = "Old Name", ShortDescription = "Old Desc", FullDescription = "Old Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "OldBrand", Category = "OldCategory", Tags = "old,tags", ImageUrl = "/images/old.jpg", ThumbnailUrl = "/images/thumbs/old.jpg", SeoTitle = "Old SEO", Slug = "old-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(updateDTO.Id)).ReturnsAsync(existing);
@@ -246,7 +246,7 @@ namespace ProductApplication.Tests.Services
         public async Task UpdateAsync_ShouldThrowException_WhenRepositoryFails()
         {
             // Arrange
-            var dto = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, StockQuantity = 40, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
+            var dto = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Gaming Monitor", ShortDescription = "High refresh rate monitor", FullDescription = "27-inch 144Hz monitor with HDR support", Price = 899.99m, DiscountPrice = 749.99m, IsActive = true, IsFeatured = false, MinimumStockThreshold = 5, AllowBackorder = false, Brand = "ViewMax", Category = "Displays", Tags = "monitor,gaming,144hz", ImageUrl = "/images/products/gaming-monitor.jpg", ThumbnailUrl = "/images/products/thumbs/gaming-monitor.jpg", SeoTitle = "Gaming Monitor - 144Hz HDR", Slug = "gaming-monitor" };
 
             var existing = new Product { Id = dto.Id, Name = "Old Name", ShortDescription = "Old Desc", FullDescription = "Old Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "OldBrand", Category = "OldCategory", Tags = "old,tags", ImageUrl = "/images/old.jpg", ThumbnailUrl = "/images/thumbs/old.jpg", SeoTitle = "Old SEO", Slug = "old-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
 
