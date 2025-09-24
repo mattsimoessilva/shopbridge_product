@@ -61,7 +61,7 @@ flowchart TD
     A[Client Applications]
 
     %% Server side grouping
-    subgraph Server [Product Service]
+    subgraph  
         B[Controllers Layer]
         C[Services Layer]
         D[Repositories Layer]
