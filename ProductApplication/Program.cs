@@ -7,12 +7,20 @@ using ProductApplication.Repositories.Interfaces;
 using ProductApplication.Services;
 using ProductApplication.Services.Interfaces;
 using System.Reflection;
+using DotNetEnv;
+
+// --- Load .env if it exists ---
+Env.Load(); 
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --- Database connection ---
+var dbPath = Environment.GetEnvironmentVariable("PRODUCT_DB_PATH")
+             ?? "Storage/database.db";
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlite("Data Source=Storage/database.db"));
+    options.UseSqlite($"Data Source={dbPath}"));
 
+// --- AutoMapper ---
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<ProductProfile>();
@@ -20,14 +28,18 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<ProductVariantProfile>();
 });
 
+
+// --- Repositories ---
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
 builder.Services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
 
+// --- Services ---
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
 builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
 
+// --- Controllers & Swagger ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -40,7 +52,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "ShopBridge - Product Service",
         Version = "v1",
-        Description = "A Web API for managing products, product variants, and product reviews in the ShopBridge system.",
+        Description = "A RESTful service for managing products, product variants, and product reviews within the ShopBridge platform. It provides endpoints to create, update, retrieve, and remove products, as well as to manage variants, handle stock availability, and maintain customer reviews for each product.",
         Contact = new OpenApiContact
         {
             Name = "@mattsimoessilva",
@@ -49,29 +61,35 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
+// --- Build app ---
 var app = builder.Build();
 
+// --- Apply migrations & seed database ---
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
     db.Database.Migrate();
+    DatabaseInitializer.Initialize(db);
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-    DatabaseInitializer.Initialize(context);
-}
-
+// --- Middleware & Swagger ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-app.UseSwagger();
-app.UseSwaggerUI();
-app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+
+// --- Run using .env port or default ---
+var port = Environment.GetEnvironmentVariable("PRODUCT_SERVICE_PORT") ?? "5000";
+app.Urls.Add($"http://*:{port}");
 app.Run();
