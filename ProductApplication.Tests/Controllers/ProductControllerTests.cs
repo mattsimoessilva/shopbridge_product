@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ProductApplication.Controllers;
@@ -43,6 +44,40 @@ namespace ProductApplication.Tests.Controllers
             _mockService.Verify(s => s.CreateAsync(dto), Times.Once);
         }
 
+        [Fact]
+        public async Task Create_ShouldReturnBadRequest_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            var dto = new ProductCreateDTO { Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/entities/wireless-mouse.jpg", ThumbnailUrl = "/images/entities/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse" };
+            _controller.ModelState.AddModelError("Name", "Required");
+
+            // Act
+            var act = await _controller.Create(dto);
+
+            // Assert
+            act.Should().BeOfType<BadRequestObjectResult>();
+            _mockService.Verify(s => s.CreateAsync(It.IsAny<ProductCreateDTO>()), Times.Never);
+
+        }
+
+        [Fact]
+        public async Task Create_ShouldReturnBadRequest_WhenServiceThrowsArgumentNullException()
+        {
+            // Arrange
+            var dto = new ProductCreateDTO { Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/entities/wireless-mouse.jpg", ThumbnailUrl = "/images/entities/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse" };
+
+            _mockService.Setup(s => s.CreateAsync(dto)).ThrowsAsync(new ArgumentNullException("dto"));
+
+            // Act
+            var act = await _controller.Create(dto);
+
+            // Assert
+            var badRequest = act as BadRequestObjectResult;
+            badRequest.Should().NotBeNull();
+            badRequest!.Value.Should().BeEquivalentTo(new { error = "dto cannot be null" });
+            _mockService.Verify(s => s.CreateAsync(dto), Times.Once);
+        }
+
         #endregion
 
         #region GetAll Method.
@@ -66,6 +101,39 @@ namespace ProductApplication.Tests.Controllers
             var okResult = act as OkObjectResult;
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(entities);
+        }
+
+        [Fact]
+        public async Task GetAll_ShouldReturnOk_WithEmptyList_WhenNoRecordsExist()
+        {
+            // Arrange
+            var entities = new List<ProductReadDTO>();
+            _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(entities);
+
+            // Act
+            var act = await _controller.GetAll();
+
+            // Assert
+            var okResult = act as OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeEquivalentTo(entities);
+            ((IEnumerable<ProductReadDTO>)okResult.Value!).Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetAll_ShouldReturnInternalServerError_WhenServiceThrowsException()
+        {
+            // Arrange
+            _mockService.Setup(s => s.GetAllAsync()).ThrowsAsync(new Exception("Database failure"));
+
+            // Act
+            var act = await _controller.GetAll();
+
+            // Assert
+            var errorResult = act as ObjectResult;
+            errorResult.Should().NotBeNull();
+            errorResult!.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+            errorResult.Value.Should().BeEquivalentTo(new { error = "Database failure" });
         }
 
         #endregion
@@ -104,6 +172,23 @@ namespace ProductApplication.Tests.Controllers
             act.Should().BeOfType<NotFoundResult>();
         }
 
+        [Fact]
+        public async Task GetById_ShouldReturnInternalServerError_WhenServiceThrowsException()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            _mockService.Setup(s => s.GetByIdAsync(id)).ThrowsAsync(new Exception("Unexpected failure"));
+
+            // Act
+            var act = await _controller.GetById(id);
+
+            // Assert
+            var errorResult = act as ObjectResult;
+            errorResult.Should().NotBeNull();
+            errorResult!.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+            errorResult.Value.Should().BeEquivalentTo(new { error = "Unexpected failure" });
+        }
+
         #endregion
 
         #region Update Method.
@@ -139,6 +224,23 @@ namespace ProductApplication.Tests.Controllers
             act.Should().BeOfType<NotFoundResult>();
         }
 
+        [Fact]
+        public async Task Update_ShouldReturnBadRequest_WhenServiceThrowsArgumentException()
+        {
+            // Arrange
+            var dto = new ProductUpdateDTO { Id = Guid.NewGuid(), Name = "Faulty Product", ShortDescription = "Faulty", FullDescription = "Faulty", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/entities/faulty.jpg", ThumbnailUrl = "/images/entities/thumbs/faulty.jpg", SeoTitle = "Faulty - Ergonomic & Silent", Slug = "faulty-product" };
+
+            _mockService.Setup(s => s.UpdateAsync(dto)).ThrowsAsync(new ArgumentException("Invalid update data.", "dto"));
+
+            // Act
+            var act = await _controller.Update(dto);
+
+            // Assert
+            var badRequest = act as BadRequestObjectResult;
+            badRequest.Should().NotBeNull();
+            badRequest!.Value.Should().BeEquivalentTo(new { error = "dto is invalid." });
+        }
+
         #endregion
 
         #region Delete Method.
@@ -169,6 +271,20 @@ namespace ProductApplication.Tests.Controllers
 
             // Assert
             act.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Delete_ShouldReturnInternalServerError_WhenServiceThrowsException()
+        {
+            var id = Guid.NewGuid();
+            _mockService.Setup(s => s.DeleteAsync(id)).ThrowsAsync(new Exception("Unexpected failure"));
+
+            var act = await _controller.Delete(id);
+
+            var errorResult = act as ObjectResult;
+            errorResult.Should().NotBeNull();
+            errorResult!.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
+            errorResult.Value.Should().BeEquivalentTo(new { error = "Unexpected failure" });
         }
 
         #endregion
