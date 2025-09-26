@@ -61,6 +61,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
+
 
 // --- Build app ---
 var app = builder.Build();
@@ -77,13 +86,22 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShopBridge - Product Service v1");
+    });
+
 }
 else
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+
+app.UseCors("AllowAll");
+
 
 app.UseAuthorization();
 app.MapControllers();
