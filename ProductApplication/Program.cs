@@ -11,7 +11,7 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlite("Data Source=Data/database.db"));
+    options.UseSqlite("Data Source=Storage/database.db"));
 
 builder.Services.AddAutoMapper(cfg =>
 {
