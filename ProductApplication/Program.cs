@@ -16,7 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // --- Database connection ---
 var dbPath = Environment.GetEnvironmentVariable("PRODUCT_DB_PATH")
-             ?? "Storage/database.db";
+             ?? "/app/Storage/database.db";
+
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
@@ -82,26 +83,16 @@ using (var scope = app.Services.CreateScope())
     DatabaseInitializer.Initialize(db);
 }
 
-// --- Middleware & Swagger ---
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShopBridge - Product Service v1");
-    });
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShopBridge - Product Service v1");
+});
 
-}
-else
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 
 
 app.UseCors("AllowAll");
-
 
 app.UseAuthorization();
 app.MapControllers();
