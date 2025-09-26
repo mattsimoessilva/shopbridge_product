@@ -317,14 +317,19 @@ namespace ProductApplication.Tests.Services
         [Fact]
         public async Task ReserveStockAsync_ShouldReturnTrue_WhenReservationIsSuccessful()
         {
+            // Arrange
+            var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
             var id = Guid.NewGuid();
             var quantity = 5;
-            var entity = new ProductVariant { Id = id, ProductId = Guid.NewGuid(), VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 199.99m, StockQuantity = 10, ReservedStockQuantity = 2, ImageUrl = "/images/blackout.jpg", IsActive = true, CreatedAt = DateTime.UtcNow };
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 10, ReservedStockQuantity = 2, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
 
+            // Act
             var result = await _service.ReserveStockAsync(id, quantity);
 
+            // Arrange
             result.Should().BeTrue();
             entity.ReservedStockQuantity.Should().Be(7);
             _repositoryMock.Verify(r => r.UpdateAsync(entity), Times.Once);
@@ -333,14 +338,19 @@ namespace ProductApplication.Tests.Services
         [Fact]
         public async Task ReserveStockAsync_ShouldThrowInvalidOperationException_WhenNotEnoughStock()
         {
+            // Arrange
+            var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
             var id = Guid.NewGuid();
             var quantity = 10;
-            var entity = new ProductVariant { Id = id, StockQuantity = 10, ReservedStockQuantity = 5 };
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 10, ReservedStockQuantity = 5, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
 
             _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
 
+            // Act
             Func<Task> act = async () => await _service.ReserveStockAsync(id, quantity);
 
+            // Assert
             await act.Should().ThrowAsync<InvalidOperationException>()
                      .WithMessage("Not enough stock available to reserve.");
         }
@@ -348,15 +358,146 @@ namespace ProductApplication.Tests.Services
         [Fact]
         public async Task ReserveStockAsync_ShouldReturnFalse_WhenEntityNotFound()
         {
+            // Arrange
             var id = Guid.NewGuid();
             var quantity = 5;
 
             _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync((ProductVariant)null);
 
+            // Act
             var result = await _service.ReserveStockAsync(id, quantity);
 
+            // Assert
             result.Should().BeFalse();
             _repositoryMock.Verify(r => r.UpdateAsync(It.IsAny<ProductVariant>()), Times.Never);
+        }
+
+        #endregion
+
+        #region ReleaseStockAsync Method.
+
+        [Fact]
+        public async Task ReleaseStockAsync_ShouldReturnTrue_WhenReleaseIsSuccessful()
+        {
+            // Arrange
+            var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            var id = Guid.NewGuid();
+            var quantity = 3;
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 10, ReservedStockQuantity = 5, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            var result = await _service.ReleaseStockAsync(id, quantity);
+
+            // Assert
+            result.Should().BeTrue();
+            entity.ReservedStockQuantity.Should().Be(2);
+            _repositoryMock.Verify(r => r.UpdateAsync(entity), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReleaseStockAsync_ShouldThrowInvalidOperationException_WhenReleasingMoreThanReserved()
+        {
+            // Arrange
+            var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            var id = Guid.NewGuid();
+            var quantity = 10;
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 10, ReservedStockQuantity = 5, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            Func<Task> act = async () => await _service.ReleaseStockAsync(id, quantity);
+
+            // Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage("Cannot release more stock than is reserved.");
+        }
+
+        [Fact]
+        public async Task ReleaseStockAsync_ShouldReturnFalse_WhenEntityNotFound()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 3;
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync((ProductVariant)null);
+
+            // Act
+            var result = await _service.ReleaseStockAsync(id, quantity);
+
+            // Assert
+            result.Should().BeFalse();
+            _repositoryMock.Verify(r => r.UpdateAsync(It.IsAny<ProductVariant>()), Times.Never);
+        }
+
+        #endregion
+
+        #region ReduceStockAsync Method.
+
+        [Fact]
+        public async Task ReduceStockAsync_ShouldReturnTrue_WhenReductionIsSuccessful()
+        {
+            // Arrange
+            var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            var id = Guid.NewGuid();
+            var quantity = 3;
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 10, ReservedStockQuantity = 5, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            var result = await _service.ReduceStockAsync(id, quantity);
+
+            // Assert
+            result.Should().BeTrue();
+            entity.StockQuantity.Should().Be(7);
+            entity.ReservedStockQuantity.Should().Be(2);
+            _repositoryMock.Verify(r => r.UpdateAsync(entity), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReduceStockAsync_ShouldThrowInvalidOperationException_WhenReservedStockIsTooLow()
+        {
+            // Arrange
+            var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            var id = Guid.NewGuid();
+            var quantity = 5;
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 10, ReservedStockQuantity = 3, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            Func<Task> act = async () => await _service.ReduceStockAsync(id, quantity);
+
+            // Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage("Cannot reduce more stock than is reserved.");
+        }
+
+        [Fact]
+        public async Task ReduceStockAsync_ShouldThrowInvalidOperationException_WhenTotalStockIsTooLow()
+        {
+            // Arrange
+            var reference = new Product { Id = Guid.NewGuid(), Name = "Wireless Mouse", ShortDescription = "Ergonomic wireless mouse", FullDescription = "Comfortable wireless mouse with adjustable DPI and silent clicks.", Price = 129.99m, DiscountPrice = 99.99m, IsActive = true, IsFeatured = true, SKU = "WM-001", StockQuantity = 150, MinimumStockThreshold = 10, AllowBackorder = false, Brand = "LogiTech", Category = "Accessories", Tags = "mouse,wireless,ergonomic", ImageUrl = "/images/products/wireless-mouse.jpg", ThumbnailUrl = "/images/products/thumbs/wireless-mouse.jpg", SeoTitle = "Wireless Mouse - Ergonomic & Silent", Slug = "wireless-mouse", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            var id = Guid.NewGuid();
+            var quantity = 10;
+            var entity = new ProductVariant { Id = Guid.NewGuid(), Product = reference, ProductId = reference.Id, VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 0, StockQuantity = 8, ReservedStockQuantity = 10, ImageUrl = "/images/products/gaming-headset-black.jpg", IsActive = true };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            Func<Task> act = async () => await _service.ReduceStockAsync(id, quantity);
+
+            // Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage("Not enough total stock to reduce.");
         }
 
         #endregion
