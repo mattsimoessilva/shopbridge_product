@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ProductApplication.Data;
 using ProductApplication.Models.Profiles;
@@ -11,7 +11,7 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlite("Data Source=database.db"));
+    options.UseSqlite("Data Source=Data/database.db"));
 
 builder.Services.AddAutoMapper(cfg =>
 {
