@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ProductApplication.Controllers;
+using ProductApplication.Models.DTOs.Product;
 using ProductApplication.Models.DTOs.ProductVariant;
 using ProductApplication.Services.Interfaces;
 
@@ -173,6 +174,165 @@ namespace ProductApplication.Tests.Controllers
 
             // Assert
             act.Should().BeOfType<NotFoundResult>();
+        }
+
+        #endregion
+
+        #region ReserveStock Method.
+
+        [Fact]
+        public async Task ReserveStock_ShouldReturnOk_WhenReservationSucceeds()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductStockUpdateDTO { Quantity = 5 };
+            _mockService.Setup(s => s.ReserveStockAsync(id, dto.Quantity)).ReturnsAsync(true);
+
+            // Act
+            var act = await _controller.ReserveStock(id, dto);
+
+            // Assert
+            act.Should().BeOfType<OkResult>();
+        }
+
+        [Fact]
+        public async Task ReserveStock_ShouldReturnNotFound_WhenReservationFails()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductStockUpdateDTO { Quantity = 5 };
+            _mockService.Setup(s => s.ReserveStockAsync(id, dto.Quantity)).ReturnsAsync(false);
+
+            // Act
+            var act = await _controller.ReserveStock(id, dto);
+
+            // Assert
+            act.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task ReserveStock_ShouldReturnBadRequest_WhenInvalidOperationExceptionThrown()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductStockUpdateDTO { Quantity = 5 };
+            var errorMessage = "Insufficient stock.";
+            _mockService.Setup(s => s.ReserveStockAsync(id, dto.Quantity))
+                        .ThrowsAsync(new InvalidOperationException(errorMessage));
+
+            // Act
+            var act = await _controller.ReserveStock(id, dto);
+
+            // Assert
+            var badRequest = act as BadRequestObjectResult;
+            badRequest.Should().NotBeNull();
+            badRequest!.Value.Should().BeEquivalentTo(new { error = errorMessage });
+        }
+
+        #endregion
+
+        #region ReleaseStock Method.
+
+        [Fact]
+        public async Task ReleaseStock_ShouldReturnOk_WhenReleaseSucceeds()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductStockUpdateDTO { Quantity = 3 };
+            _mockService.Setup(s => s.ReleaseStockAsync(id, dto.Quantity)).ReturnsAsync(true);
+
+            // Act
+            var act = await _controller.ReleaseStock(id, dto);
+
+            // Assert
+            act.Should().BeOfType<OkResult>();
+        }
+
+        [Fact]
+        public async Task ReleaseStock_ShouldReturnNotFound_WhenReleaseFails()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductStockUpdateDTO { Quantity = 3 };
+            _mockService.Setup(s => s.ReleaseStockAsync(id, dto.Quantity)).ReturnsAsync(false);
+
+            // Act
+            var act = await _controller.ReleaseStock(id, dto);
+
+            // Assert
+            act.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task ReleaseStock_ShouldReturnBadRequest_WhenInvalidOperationExceptionThrown()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductStockUpdateDTO { Quantity = 3 };
+            var errorMessage = "Stock was not reserved.";
+            _mockService.Setup(s => s.ReleaseStockAsync(id, dto.Quantity))
+                        .ThrowsAsync(new InvalidOperationException(errorMessage));
+
+            // Act
+            var act = await _controller.ReleaseStock(id, dto);
+
+            // Assert
+            var badRequest = act as BadRequestObjectResult;
+            badRequest.Should().NotBeNull();
+            badRequest!.Value.Should().BeEquivalentTo(new { error = errorMessage });
+        }
+
+        #endregion
+
+        #region ReduceStock Method.
+
+        [Fact]
+        public async Task ReduceStock_ShouldReturnOk_WhenReductionSucceeds()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductVariantStockUpdateDTO { Quantity = 2 };
+            _mockService.Setup(s => s.ReduceStockAsync(id, dto.Quantity)).ReturnsAsync(true);
+
+            // Act
+            var act = await _controller.ReduceStock(id, dto);
+
+            // Assert
+            act.Should().BeOfType<OkResult>();
+        }
+
+        [Fact]
+        public async Task ReduceStock_ShouldReturnNotFound_WhenReductionFails()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductVariantStockUpdateDTO { Quantity = 2 };
+            _mockService.Setup(s => s.ReduceStockAsync(id, dto.Quantity)).ReturnsAsync(false);
+
+            // Act
+            var act = await _controller.ReduceStock(id, dto);
+
+            // Assert
+            act.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task ReduceStock_ShouldReturnBadRequest_WhenInvalidOperationExceptionThrown()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var dto = new ProductVariantStockUpdateDTO { Quantity = 2 };
+            var errorMessage = "Cannot reduce below zero.";
+            _mockService.Setup(s => s.ReduceStockAsync(id, dto.Quantity))
+                        .ThrowsAsync(new InvalidOperationException(errorMessage));
+
+            // Act
+            var act = await _controller.ReduceStock(id, dto);
+
+            // Assert
+            var badRequest = act as BadRequestObjectResult;
+            badRequest.Should().NotBeNull();
+            badRequest!.Value.Should().BeEquivalentTo(new { error = errorMessage });
         }
 
         #endregion

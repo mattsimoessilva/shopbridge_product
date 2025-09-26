@@ -311,5 +311,54 @@ namespace ProductApplication.Tests.Services
         }
 
         #endregion
+
+        #region ReserveStockAsync Method.
+
+        [Fact]
+        public async Task ReserveStockAsync_ShouldReturnTrue_WhenReservationIsSuccessful()
+        {
+            var id = Guid.NewGuid();
+            var quantity = 5;
+            var entity = new ProductVariant { Id = id, ProductId = Guid.NewGuid(), VariantName = "Blackout Edition", Color = "Black", Size = "Standard", Price = 199.99m, StockQuantity = 10, ReservedStockQuantity = 2, ImageUrl = "/images/blackout.jpg", IsActive = true, CreatedAt = DateTime.UtcNow };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            var result = await _service.ReserveStockAsync(id, quantity);
+
+            result.Should().BeTrue();
+            entity.ReservedStockQuantity.Should().Be(7);
+            _repositoryMock.Verify(r => r.UpdateAsync(entity), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReserveStockAsync_ShouldThrowInvalidOperationException_WhenNotEnoughStock()
+        {
+            var id = Guid.NewGuid();
+            var quantity = 10;
+            var entity = new ProductVariant { Id = id, StockQuantity = 10, ReservedStockQuantity = 5 };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            Func<Task> act = async () => await _service.ReserveStockAsync(id, quantity);
+
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage("Not enough stock available to reserve.");
+        }
+
+        [Fact]
+        public async Task ReserveStockAsync_ShouldReturnFalse_WhenEntityNotFound()
+        {
+            var id = Guid.NewGuid();
+            var quantity = 5;
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync((ProductVariant)null);
+
+            var result = await _service.ReserveStockAsync(id, quantity);
+
+            result.Should().BeFalse();
+            _repositoryMock.Verify(r => r.UpdateAsync(It.IsAny<ProductVariant>()), Times.Never);
+        }
+
+        #endregion
     }
 }

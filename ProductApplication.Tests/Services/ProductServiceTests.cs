@@ -302,5 +302,178 @@ namespace ProductApplication.Tests.Services
         }
 
         #endregion
+
+        #region ReserveStockAsync Method.
+
+        [Fact]
+        public async Task ReserveStockAsync_ShouldReturnTrue_WhenReservationIsSuccessful()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 5;
+            var entity = new Product { Id = id, Name = "Name", ShortDescription = "Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, ReservedStockQuantity = 2, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "Brand", Category = "Category", Tags = "some,tags", ImageUrl = "/images/file.jpg", ThumbnailUrl = "/images/thumbs/file.jpg", SeoTitle = "Some SEO", Slug = "some-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            var result = await _service.ReserveStockAsync(id, quantity);
+
+            // Assert
+            result.Should().BeTrue();
+            entity.ReservedStockQuantity.Should().Be(7);
+            _repositoryMock.Verify(r => r.UpdateAsync(entity), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReserveStockAsync_ShouldThrowInvalidOperationException_WhenNotEnoughStock()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 10;
+            var entity = new Product { Id = id, Name = "Name", ShortDescription = "Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, ReservedStockQuantity = 5, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "Brand", Category = "Category", Tags = "some,tags", ImageUrl = "/images/file.jpg", ThumbnailUrl = "/images/thumbs/file.jpg", SeoTitle = "Some SEO", Slug = "some-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            Func<Task> act = async () => await _service.ReserveStockAsync(id, quantity);
+
+            // Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage("Not enough stock available to reserve.");
+        }
+
+        [Fact]
+        public async Task ReserveStockAsync_ShouldReturnFalse_WhenEntityNotFound()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 5;
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync((Product)null);
+
+            // Act
+            var result = await _service.ReserveStockAsync(id, quantity);
+
+            // Assert
+            result.Should().BeFalse();
+            _repositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Product>()), Times.Never);
+        }
+
+        #endregion
+
+        #region ReleaseStockAsync Method.
+
+        [Fact]
+        public async Task ReleaseStockAsync_ShouldReturnTrue_WhenReleaseIsSuccessful()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 3;
+            var entity = new Product { Id = id, Name = "Name", ShortDescription = "Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, ReservedStockQuantity = 5, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "Brand", Category = "Category", Tags = "some,tags", ImageUrl = "/images/file.jpg", ThumbnailUrl = "/images/thumbs/file.jpg", SeoTitle = "Some SEO", Slug = "some-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            var result = await _service.ReleaseStockAsync(id, quantity);
+
+            // Assert
+            result.Should().BeTrue();
+            entity.ReservedStockQuantity.Should().Be(2);
+            _repositoryMock.Verify(r => r.UpdateAsync(entity), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReleaseStockAsync_ShouldThrowInvalidOperationException_WhenReleasingMoreThanReserved()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 10;
+            var entity = new Product { Id = id, Name = "Name", ShortDescription = "Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, ReservedStockQuantity = 5, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "Brand", Category = "Category", Tags = "some,tags", ImageUrl = "/images/file.jpg", ThumbnailUrl = "/images/thumbs/file.jpg", SeoTitle = "Some SEO", Slug = "some-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            Func<Task> act = async () => await _service.ReleaseStockAsync(id, quantity);
+
+            // Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage("Cannot release more stock than is reserved.");
+        }
+
+        [Fact]
+        public async Task ReleaseStockAsync_ShouldReturnFalse_WhenEntityNotFound()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 3;
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync((Product)null);
+
+            // Act
+            var result = await _service.ReleaseStockAsync(id, quantity);
+
+            // Assert
+            result.Should().BeFalse();
+            _repositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Product>()), Times.Never);
+        }
+
+        #endregion
+
+        #region ReduceStockAsync Method.
+
+        [Fact]
+        public async Task ReduceStockAsync_ShouldReturnTrue_WhenReductionIsSuccessful()
+        {
+            var id = Guid.NewGuid();
+            var quantity = 3;
+            var entity = new Product { Id = id, Name = "Name", ShortDescription = "Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, ReservedStockQuantity = 5, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "Brand", Category = "Category", Tags = "some,tags", ImageUrl = "/images/file.jpg", ThumbnailUrl = "/images/thumbs/file.jpg", SeoTitle = "Some SEO", Slug = "some-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            var result = await _service.ReduceStockAsync(id, quantity);
+
+            result.Should().BeTrue();
+            entity.StockQuantity.Should().Be(7);
+            entity.ReservedStockQuantity.Should().Be(2);
+            _repositoryMock.Verify(r => r.UpdateAsync(entity), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReduceStockAsync_ShouldThrowInvalidOperationException_WhenReservedStockIsTooLow()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 5;
+            var entity = new Product { Id = id, Name = "Name", ShortDescription = "Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 10, ReservedStockQuantity = 3, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "Brand", Category = "Category", Tags = "some,tags", ImageUrl = "/images/file.jpg", ThumbnailUrl = "/images/thumbs/file.jpg", SeoTitle = "Some SEO", Slug = "some-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            Func<Task> act = async () => await _service.ReduceStockAsync(id, quantity);
+
+            // Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage("Cannot reduce more stock than is reserved.");
+        }
+
+        [Fact]
+        public async Task ReduceStockAsync_ShouldThrowInvalidOperationException_WhenTotalStockIsTooLow()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var quantity = 10;
+            var entity = new Product { Id = id, Name = "Name", ShortDescription = "Desc", FullDescription = "Full Desc", Price = 100m, DiscountPrice = 90m, IsActive = true, IsFeatured = false, SKU = "GM-004", StockQuantity = 8, ReservedStockQuantity = 10, MinimumStockThreshold = 2, AllowBackorder = false, Brand = "Brand", Category = "Category", Tags = "some,tags", ImageUrl = "/images/file.jpg", ThumbnailUrl = "/images/thumbs/file.jpg", SeoTitle = "Some SEO", Slug = "some-slug", Variants = new List<ProductVariant>(), Reviews = new List<ProductReview>() };
+
+            _repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(entity);
+
+            // Act
+            Func<Task> act = async () => await _service.ReduceStockAsync(id, quantity);
+
+            // Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                     .WithMessage("Not enough total stock to reduce.");
+        }
+
+        #endregion
     }
 }
