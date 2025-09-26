@@ -1,0 +1,45 @@
+﻿# Build artifacts
+bin/
+obj/
+out/
+
+# User secrets and config
+*.db
+*.sqlite
+*.mdf
+*.ldf
+*.bak
+*.log
+*.suo
+*.user
+*.vspscc
+*.vssscc
+*.swp
+*.tmp
+
+# Environment and secrets
+.env
+*.env
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.code-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Git and version control
+.git/
+.gitignore
+
+# Test and coverage artifacts
+TestResults/
+coverage/
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet packages (if locally restored)
+packages/
