@@ -73,20 +73,20 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [SwaggerOperation(Summary = "Updates an existing record.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromBody] ProductUpdateDTO dto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ProductUpdateDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var success = await _service.UpdateAsync(dto);
+                var success = await _service.UpdateAsync(id, dto);
                 if (!success)
                     return NotFound();
 
@@ -101,6 +101,7 @@ namespace ProductApplication.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
             }
         }
+
 
 
         [HttpDelete("{id}")]

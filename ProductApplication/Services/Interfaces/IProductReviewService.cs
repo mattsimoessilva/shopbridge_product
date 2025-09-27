@@ -10,7 +10,7 @@ namespace ProductApplication.Services.Interfaces
         public Task<ProductReviewReadDTO> CreateAsync(ProductReviewCreateDTO dto);
         public Task<IEnumerable<ProductReviewReadDTO>> GetAllAsync();
         public Task<ProductReviewReadDTO?> GetByIdAsync(Guid id);
-        public Task<bool> UpdateAsync(ProductReviewUpdateDTO dto);
+        public Task<bool> UpdateAsync(Guid id, ProductReviewUpdateDTO dto);
         public Task<bool> DeleteAsync(Guid id);
     }
 }

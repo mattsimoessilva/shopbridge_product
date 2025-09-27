@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductApplication.Models.DTOs.Product;
 using ProductApplication.Models.DTOs.ProductVariant;
 using ProductApplication.Services.Interfaces;
@@ -74,24 +74,24 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [SwaggerOperation(Summary = "Updates an existing record.")]
         [ProducesResponseType(typeof(ProductVariantUpdateDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromBody] ProductVariantUpdateDTO dto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ProductVariantUpdateDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var success = await _service.UpdateAsync(dto);
+                var success = await _service.UpdateAsync(id, dto);
                 if (!success)
                     return NotFound();
 
-                return Ok();
+                return Ok(dto);
             }
             catch (ArgumentException ex)
             {
@@ -102,6 +102,7 @@ namespace ProductApplication.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
             }
         }
+
 
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Deletes a record by ID.")]
@@ -123,7 +124,7 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPost("{id}/reserve")]
+        [HttpPatch("{id}/reserve")]
         [SwaggerOperation(Summary = "Reserves stock.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -151,7 +152,7 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPost("{id}/release")]
+        [HttpPatch("{id}/release")]
         [SwaggerOperation(Summary = "Releases previously reserved stock.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -179,7 +180,7 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPatch("{id}/quantity")]
+        [HttpPatch("{id}/reduce")]
         [SwaggerOperation(Summary = "Reduces stock permanently.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -45,8 +45,6 @@ namespace ProductApplication.Repositories
 
             return await _context.Products
                 .AsNoTracking()
-                .Include(p => p.Variants)
-                .Include(p => p.Reviews)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -56,7 +54,6 @@ namespace ProductApplication.Repositories
                 throw new ArgumentNullException(nameof(updated));
 
             var existing = await _context.Products
-                .Include(p => p.Variants)
                 .FirstOrDefaultAsync(p => p.Id == updated.Id);
 
             if (existing == null)
@@ -67,20 +64,6 @@ namespace ProductApplication.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
-
-        public async Task<bool> PatchAsync(Guid id, Action<Product> patchAction)
-        {
-            var entity = await _context.Products
-                .FirstOrDefaultAsync(p => p.Id == id);
-
-            if (entity == null) return false;
-
-            patchAction(entity);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-
 
         public async Task<bool> DeleteAsync(Guid id)
         {
@@ -93,6 +76,18 @@ namespace ProductApplication.Repositories
             if (entity == null) return false;
 
             _context.Products.Remove(entity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> PatchAsync(Guid id, Action<Product> patchAction)
+        {
+            var entity = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (entity == null) return false;
+
+            patchAction(entity);
             await _context.SaveChangesAsync();
             return true;
         }

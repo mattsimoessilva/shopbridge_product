@@ -75,5 +75,16 @@ namespace ProductApplication.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> PatchAsync(Guid id, Action<ProductVariant> patchAction)
+        {
+            var entity = await _context.ProductVariants
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (entity == null) return false;
+
+            patchAction(entity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

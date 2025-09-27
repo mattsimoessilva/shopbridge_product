@@ -1,12 +1,9 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ProductApplication.Models.DTOs.Product
 {
     public class ProductUpdateDTO
     {
-        [Required]
-        public required Guid Id { get; set; } 
-
         [Required]
         [MaxLength(150)]
         public required string Name { get; set; }

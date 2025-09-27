@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductApplication.Models.DTOs.ProductReview;
 using ProductApplication.Services.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
@@ -73,24 +73,25 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [SwaggerOperation(Summary = "Updates an existing record.")]
         [ProducesResponseType(typeof(ProductReviewUpdateDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromBody] ProductReviewUpdateDTO dto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ProductReviewUpdateDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var success = await _service.UpdateAsync(dto);
+                // Pass the id explicitly to the service
+                var success = await _service.UpdateAsync(id, dto);
                 if (!success)
                     return NotFound();
 
-                return Ok();
+                return Ok(dto);
             }
             catch (ArgumentException ex)
             {
@@ -101,6 +102,7 @@ namespace ProductApplication.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
             }
         }
+
 
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Deletes a record by ID.")]

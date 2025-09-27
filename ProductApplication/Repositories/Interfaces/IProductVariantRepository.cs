@@ -9,5 +9,6 @@ namespace ProductApplication.Repositories.Interfaces
         Task<ProductVariant?> GetByIdAsync(Guid id);
         Task<bool> UpdateAsync(ProductVariant productVariant);
         Task<bool> DeleteAsync(Guid id);
+        Task<bool> PatchAsync(Guid id, Action<ProductVariant> patchAction);
     }
 }

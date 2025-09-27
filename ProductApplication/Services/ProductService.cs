@@ -54,12 +54,12 @@ namespace ProductApplication.Services
             return _mapper.Map<ProductReadDTO>(entity);
         }
 
-        public async Task<bool> UpdateAsync(ProductUpdateDTO dto)
+        public async Task<bool> UpdateAsync(Guid id, ProductUpdateDTO dto)
         {
-            if (dto == null || dto.Id == Guid.Empty)
+            if (dto == null || id == Guid.Empty)
                 throw new ArgumentException("Invalid update data.");
 
-            var existing = await _repository.GetByIdAsync(dto.Id);
+            var existing = await _repository.GetByIdAsync(id);
             if (existing == null)
                 return false;
 
