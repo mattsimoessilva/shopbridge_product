@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductApplication.Models.DTOs.Product;
 using ProductApplication.Services.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
@@ -123,7 +123,7 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPost("{id}/reserve")]
+        [HttpPatch("{id}/reserve")]
         [SwaggerOperation(Summary = "Reserves stock.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -151,7 +151,7 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPost("{id}/release")]
+        [HttpPatch("{id}/release")]
         [SwaggerOperation(Summary = "Releases previously reserved stock.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -179,7 +179,7 @@ namespace ProductApplication.Controllers
             }
         }
 
-        [HttpPatch("{id}/quantity")]
+        [HttpPatch("{id}/reduce")]
         [SwaggerOperation(Summary = "Reduces stock permanently.")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

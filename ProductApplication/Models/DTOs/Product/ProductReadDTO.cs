@@ -1,8 +1,9 @@
-using ProductApplication.Models.DTOs.ProductReview;
+﻿using ProductApplication.Models.DTOs.ProductReview;
 using ProductApplication.Models.DTOs.ProductVariant;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ProductApplication.Models.DTOs.Product
 {
@@ -30,7 +31,7 @@ namespace ProductApplication.Models.DTOs.Product
 
         public int ReservedStockQuantity { get; set; }
 
-        public int AvailableStock => StockQuantity - ReservedStockQuantity;
+        public int AvailableStock { get; set; }
 
         public int MinimumStockThreshold { get; set; }
 
@@ -53,9 +54,5 @@ namespace ProductApplication.Models.DTOs.Product
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
-
-        public required List<ProductVariantReadDTO> Variants { get; set; }
-
-        public required List<ProductReviewReadDTO> Reviews { get; set; }
     }
 }

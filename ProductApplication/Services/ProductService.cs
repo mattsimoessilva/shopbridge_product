@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using ProductApplication.Models.DTOs.Product;
 using ProductApplication.Models.Entities;
 using ProductApplication.Repositories.Interfaces;
@@ -86,19 +86,15 @@ namespace ProductApplication.Services
             if (id == Guid.Empty || quantity <= 0)
                 throw new ArgumentException("Invalid entity ID or quantity.");
 
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                return false;
+            return await _repository.PatchAsync(id, entity =>
+            {
+                var available = entity.StockQuantity - entity.ReservedStockQuantity;
+                if (available < quantity)
+                    throw new InvalidOperationException("Not enough stock available to reserve.");
 
-            var availableStock = entity.StockQuantity - entity.ReservedStockQuantity;
-            if (availableStock < quantity)
-                throw new InvalidOperationException("Not enough stock available to reserve.");
-
-            entity.ReservedStockQuantity += quantity;
-            entity.UpdatedAt = DateTime.UtcNow;
-
-            await _repository.UpdateAsync(entity);
-            return true;
+                entity.ReservedStockQuantity += quantity;
+                entity.UpdatedAt = DateTime.UtcNow;
+            });
         }
 
         public async Task<bool> ReleaseStockAsync(Guid id, int quantity)
@@ -106,18 +102,14 @@ namespace ProductApplication.Services
             if (id == Guid.Empty || quantity <= 0)
                 throw new ArgumentException("Invalid entity ID or quantity.");
 
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                return false;
+            return await _repository.PatchAsync(id, entity =>
+            {
+                if (entity.ReservedStockQuantity < quantity)
+                    throw new InvalidOperationException("Cannot release more stock than is reserved.");
 
-            if (entity.ReservedStockQuantity < quantity)
-                throw new InvalidOperationException("Cannot release more stock than is reserved.");
-
-            entity.ReservedStockQuantity -= quantity;
-            entity.UpdatedAt = DateTime.UtcNow;
-
-            await _repository.UpdateAsync(entity);
-            return true;
+                entity.ReservedStockQuantity -= quantity;
+                entity.UpdatedAt = DateTime.UtcNow;
+            });
         }
 
         public async Task<bool> ReduceStockAsync(Guid id, int quantity)
@@ -125,22 +117,19 @@ namespace ProductApplication.Services
             if (id == Guid.Empty || quantity <= 0)
                 throw new ArgumentException("Invalid entity ID or quantity.");
 
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                return false;
+            return await _repository.PatchAsync(id, entity =>
+            {
+                if (entity.ReservedStockQuantity < quantity)
+                    throw new InvalidOperationException("Cannot reduce more stock than is reserved.");
 
-            if (entity.ReservedStockQuantity < quantity)
-                throw new InvalidOperationException("Cannot reduce more stock than is reserved.");
+                if (entity.StockQuantity < quantity)
+                    throw new InvalidOperationException("Not enough total stock to reduce.");
 
-            if (entity.StockQuantity < quantity)
-                throw new InvalidOperationException("Not enough total stock to reduce.");
-
-            entity.StockQuantity -= quantity;
-            entity.ReservedStockQuantity -= quantity;
-            entity.UpdatedAt = DateTime.UtcNow;
-
-            await _repository.UpdateAsync(entity);
-            return true;
+                entity.StockQuantity -= quantity;
+                entity.ReservedStockQuantity -= quantity;
+                entity.UpdatedAt = DateTime.UtcNow;
+            });
         }
+
     }
 }

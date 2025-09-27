@@ -68,6 +68,20 @@ namespace ProductApplication.Repositories
             return true;
         }
 
+        public async Task<bool> PatchAsync(Guid id, Action<Product> patchAction)
+        {
+            var entity = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (entity == null) return false;
+
+            patchAction(entity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+
         public async Task<bool> DeleteAsync(Guid id)
         {
             if (id == Guid.Empty)
